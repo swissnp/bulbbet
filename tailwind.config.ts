@@ -6,9 +6,12 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: ["var(--font-sans)", ...fontFamily.sans],
+        sans: ["Nunito", ...fontFamily.sans],
       },
     },
   },
-  plugins: [],
+  daisyui: {
+    themes: ["dracula"],
+  },
+  plugins: [require("daisyui")],
 } satisfies Config;
