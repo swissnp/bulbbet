@@ -6,7 +6,10 @@ import { api } from "~/utils/api";
 
 export default function Home() {
   const hello = api.post.hello.useQuery({ text: "from tRPC" });
-
+  const { data } = api.user.getAllUsers.useQuery({
+    search: "test",
+  });
+  console.log(data);
   return (
     <>
       <Head>
@@ -60,7 +63,7 @@ function AuthShowcase() {
 
   const { data: secretMessage } = api.post.getSecretMessage.useQuery(
     undefined, // no input
-    { enabled: sessionData?.user !== undefined }
+    { enabled: sessionData?.user !== undefined },
   );
 
   return (
