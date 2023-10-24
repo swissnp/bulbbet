@@ -33,7 +33,7 @@ const CountDown = ({ tillDateTime }: { tillDateTime: Date }) => {
             days
           </div>
         )}
-        {countdown.hours && (
+        {countdown.hours > 1 && (
           <div className="flex flex-col">
             <span className="countdown font-sans text-2xl">
               <span
@@ -43,7 +43,7 @@ const CountDown = ({ tillDateTime }: { tillDateTime: Date }) => {
             hours
           </div>
         )}
-        {countdown.minutes && (
+        {countdown.minutes > 1 && (
           <div className="flex flex-col">
             <span className="countdown font-sans text-2xl">
               <span
