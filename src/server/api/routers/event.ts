@@ -37,4 +37,13 @@ export const eventRouter = createTRPCRouter({
       );
       return { url, fileName };
     }),
+  getMyEvents: protectedProcedure
+    .input(z.object({}))
+    .query(async ({ ctx }) => {
+      const result = await db.event.findMany({
+        where: { createdBy: { id: ctx.session.user.id } },
+        orderBy: { resolutedAt: "asc" },
+      });
+      return result;
+    }),
 });
