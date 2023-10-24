@@ -80,10 +80,11 @@ model Event {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
     isResoluted Boolean @default(false)
-    resolutedAt DateTime
+    resolutedAt DateTime?
     resolutionDetails String?
     createdBy   User   @relation(fields: [createdById], references: [id])
     createdById String
+    imageUrl String
     nextAgreePrice Decimal @default(0.5)
     eventHistories EventHistory[]
     resolutions Resolution[]
