@@ -7,6 +7,7 @@ import {
 import { useRouter } from "next/router";
 import { api } from "~/utils/api";
 import { useState } from "react";
+import Header from "~/components/Header";
 
 export default function Create() {
   const {
@@ -74,6 +75,7 @@ export default function Create() {
   };
   return (
     <div className="flex min-h-screen flex-col items-center justify-center align-middle ">
+      <Header />
       <div className="bg-neutral mx- grid grid-cols-1 gap-3 rounded-2xl p-7 drop-shadow-2xl md:min-w-[30rem]">
         <h1 className="px-2 py-5 text-4xl">
           <b>Create Event</b>
