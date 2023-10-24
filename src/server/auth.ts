@@ -46,6 +46,12 @@ export const authOptions: NextAuthOptions = {
         id: user.id,
       },
     }),
+    // signIn: ({ user }) => {
+    //   if (!user.email?.endsWith("@student.chula.ac.th")) {
+    //     return false;
+    //   }
+    //   return true;
+    // }
   },
   adapter: PrismaAdapter(db),
   providers: [
@@ -64,6 +70,7 @@ export const authOptions: NextAuthOptions = {
       clientId: env.DISCORD_CLIENT_ID,
       clientSecret: env.DISCORD_CLIENT_SECRET,
     }),
+
     /**
      * ...add more providers here.
      *

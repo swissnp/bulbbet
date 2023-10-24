@@ -8,6 +8,8 @@ import { useRouter } from "next/router";
 import { api } from "~/utils/api";
 import { useState } from "react";
 import Header from "~/components/Header";
+import { getServerAuthSession } from "~/server/auth";
+import type { GetServerSidePropsContext } from "next";
 
 export default function Create() {
   const {
@@ -154,3 +156,18 @@ export default function Create() {
     </div>
   );
 }
+
+export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
+  const session = await getServerAuthSession(ctx);
+  if (!session) {
+    return {
+      redirect: {
+        destination: "/login",
+        permanent: false,
+      },
+    };
+  }
+  return {
+    props: {},
+  };
+};

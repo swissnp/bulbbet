@@ -2,7 +2,8 @@ import { api } from "~/utils/api";
 import Header from "~/components/Header";
 import Image from "next/image";
 import CountDown from "~/components/Countdown";
-
+import { getServerAuthSession } from "~/server/auth";
+import type { GetServerSidePropsContext } from "next";
 const CreatedEventHistory = () => {
   const { data: events } = api.event.getMyEvents.useQuery({});
 
@@ -70,3 +71,18 @@ const CreatedEventHistory = () => {
   );
 };
 export default CreatedEventHistory;
+
+export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
+  const session = await getServerAuthSession(ctx);
+  if (!session) {
+    return {
+      redirect: {
+        destination: "/login",
+        permanent: false,
+      },
+    };
+  }
+  return {
+    props: {},
+  };
+};
