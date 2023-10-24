@@ -1,11 +1,10 @@
-import React, { useEffect } from "react";
+import React from "react";
 import Link from "next/link";
 import { signOut, useSession } from "next-auth/react";
-import { api } from "~/utils/api";
 const Header = () => {
   const { data: session } = useSession();
   return (
-    <div className="z-100 fixed top-4 w-full px-3">
+    <div className="fixed top-4 z-50 w-full px-4">
       <div className="navbar bg-neutral w-full rounded-2xl drop-shadow-lg">
         <div className="navbar-start">
           <div className="dropdown">
@@ -43,7 +42,7 @@ const Header = () => {
             </ul>
           </div>
           <Link className="btn-ghost btn text-xl normal-case" href="/">
-            {"🎰 CUbet"}
+            {"💡🎰 Bulbbet"}
           </Link>
         </div>
         <div className="navbar-center hidden lg:flex">
