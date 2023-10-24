@@ -23,7 +23,7 @@ const CountDown = ({ tillDateTime }: { tillDateTime: Date }) => {
   return (
     <span className="countdown h-12 font-sans text-lg">
       <div className="grid h-12 grid-flow-col gap-5 overflow-y-visible text-center before:hidden">
-        {countdown.days > 1 && (
+        {countdown.days > 0 && (
           <div className="flex flex-col">
             <span className="countdown font-sans text-2xl">
               <span
@@ -33,7 +33,7 @@ const CountDown = ({ tillDateTime }: { tillDateTime: Date }) => {
             days
           </div>
         )}
-        {countdown.hours > 1 && (
+        {countdown.hours >= 0 && (
           <div className="flex flex-col">
             <span className="countdown font-sans text-2xl">
               <span
@@ -43,7 +43,7 @@ const CountDown = ({ tillDateTime }: { tillDateTime: Date }) => {
             hours
           </div>
         )}
-        {countdown.minutes > 1 && (
+        {countdown.minutes >= 0 && (
           <div className="flex flex-col">
             <span className="countdown font-sans text-2xl">
               <span
@@ -53,16 +53,6 @@ const CountDown = ({ tillDateTime }: { tillDateTime: Date }) => {
             min
           </div>
         )}
-        {/* {countdown.seconds && (
-          <div className="flex flex-col">
-            <span className="countdown font-sans text-2xl">
-              <span
-                style={{ "--value": countdown.seconds } as React.CSSProperties}
-              ></span>
-            </span>
-            sec
-          </div>
-        )} */}
       </div>
     </span>
   );

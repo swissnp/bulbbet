@@ -7,7 +7,7 @@ const CreatedEventHistory = () => {
   const { data: events } = api.event.getMyEvents.useQuery({});
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center">
+    <div className="bg-base-100 flex min-h-screen flex-col items-center justify-center">
       <Header />
       <div className="pt-28">
         <h1 className="py-3 pb-10 text-3xl font-extrabold tracking-tight text-white sm:text-[3rem]">
@@ -16,7 +16,7 @@ const CreatedEventHistory = () => {
         <div className="grid grid-cols-1 gap-4 gap-x-5 md:grid-cols-2 lg:grid-cols-3">
           {events?.map((event) => {
             return (
-              <div className="card bg-base-100 w-96 shadow-xl" key={event.id}>
+              <div className="card bg-base-200 w-96 shadow-xl" key={event.id}>
                 <div>
                   <div className="flex h-96 w-96 flex-grow-0 overflow-hidden rounded-t-xl ">
                     <Image

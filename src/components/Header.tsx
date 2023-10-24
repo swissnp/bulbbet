@@ -5,7 +5,7 @@ const Header = () => {
   const { data: session } = useSession();
   return (
     <div className="fixed top-4 z-50 w-full px-4">
-      <div className="navbar bg-neutral w-full rounded-2xl drop-shadow-lg">
+      <div className="navbar bg-base-200 w-full rounded-2xl drop-shadow-lg">
         <div className="navbar-start">
           <div className="dropdown">
             <label tabIndex={0} className="btn-ghost btn lg:hidden">
@@ -26,7 +26,7 @@ const Header = () => {
             </label>
             <ul
               tabIndex={0}
-              className="dropdown-content menu rounded-box menu-compact bg-base-100 mt-3 w-52 p-2 shadow"
+              className="dropdown-content menu rounded-box menu-compact bg-base-200 mt-3 w-52 p-2 shadow"
             >
               <li>
                 <Link href="/collection">Listings</Link>
@@ -108,7 +108,7 @@ const Header = () => {
               </label>{" "}
               <ul
                 tabIndex={0}
-                className="dropdown-content menu rounded-box menu-compact bg-base-100 relative mt-3 w-52 p-2 shadow"
+                className="dropdown-content menu rounded-box menu-compact bg-base-200 relative mt-3 w-52 p-2 shadow"
               >
                 {!session ? (
                   <div>
@@ -120,9 +120,17 @@ const Header = () => {
                     </li>
                   </div>
                 ) : (
-                  <li>
-                    <button onClick={() => signOut()}>Sign out</button>
-                  </li>
+                  <div>
+                    <li>
+                      <Link href="/history/betting">Betting History</Link>
+                    </li>
+                    <li>
+                      <Link href="/history/events">Event History</Link>
+                    </li>
+                    <li>
+                      <button onClick={() => signOut()}>Sign out</button>
+                    </li>
+                  </div>
                 )}
               </ul>
             </div>
