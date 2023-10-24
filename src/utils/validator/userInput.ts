@@ -11,3 +11,9 @@ export const eventCreateSchema = z.object({
   fileName: z.string().min(1,{message: "Please upload a file"})
 });
 export type IEventCreateSchema = z.infer<typeof eventCreateSchema>;
+
+export const VerificationEmailSchema = z.object({
+  email: z.string().email('Please enter a valid email')
+  // .endsWith("chula.ac.th", "Email must be chula.ac.th"),
+});
+export type IVerificationEmail = z.infer<typeof VerificationEmailSchema>;

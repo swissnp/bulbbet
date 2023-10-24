@@ -3,7 +3,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import {
   type IEventCreateSchema,
   eventCreateSchema,
-} from "~/utils/validation/event";
+} from "~/utils/validator/userInput";
 import { useRouter } from "next/router";
 import { api } from "~/utils/api";
 import { useState } from "react";
@@ -78,7 +78,7 @@ export default function Create() {
   return (
     <div className="flex min-h-screen flex-col items-center justify-center align-middle ">
       <Header />
-      <div className="bg-base-200 grid grid-cols-1 gap-4 rounded-2xl p-8 drop-shadow-2xl md:min-w-[30rem]">
+      <div className="bg-base-200 m-4 mt-24 grid grid-cols-1 gap-4 rounded-2xl p-8 drop-shadow-2xl md:min-w-[30rem]">
         <h1 className="px-2 py-5 text-4xl">
           <b>Create Event</b>
         </h1>

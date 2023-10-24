@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { eventCreateSchema } from "~/utils/validation/event";
+import { eventCreateSchema } from "~/utils/validator/userInput";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { PutObjectCommand } from "@aws-sdk/client-s3";

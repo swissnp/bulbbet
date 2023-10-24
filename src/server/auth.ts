@@ -47,13 +47,14 @@ export const authOptions: NextAuthOptions = {
       },
     }),
     // signIn: ({ user }) => {
-    //   if (!user.email?.endsWith("@student.chula.ac.th")) {
+    //   if (!user.email?.endsWith("chula.ac.th")) {
     //     return false;
     //   }
     //   return true;
     // }
   },
   adapter: PrismaAdapter(db),
+  // session: { strategy: "jwt" },
   providers: [
     EmailProvider({
       server: {
@@ -66,10 +67,10 @@ export const authOptions: NextAuthOptions = {
       },
       from: env.EMAIL_FROM,
     }),
-    DiscordProvider({
-      clientId: env.DISCORD_CLIENT_ID,
-      clientSecret: env.DISCORD_CLIENT_SECRET,
-    }),
+    // DiscordProvider({
+    //   clientId: env.DISCORD_CLIENT_ID,
+    //   clientSecret: env.DISCORD_CLIENT_SECRET,
+    // }),
 
     /**
      * ...add more providers here.
@@ -81,6 +82,10 @@ export const authOptions: NextAuthOptions = {
      * @see https://next-auth.js.org/providers/github
      */
   ],
+  pages: {
+    signIn: '/auth/login',
+    verifyRequest: '/auth/verify-request', // (used for check email message)
+  },
 };
 
 /**
