@@ -30,15 +30,12 @@ export default function Create() {
       await router.push(`/event/${result.id}`);
     },
   });
-  const { data } = api.event.getPresignedUrl.useQuery(
-    {},
-    {
-      refetchOnMount: false,
-      refetchInterval: 3000 * 1000, // 50 minutes
-      refetchOnWindowFocus: false,
-      enabled: !file,
-    },
-  );
+  const { data } = api.event.getPresignedUrl.useQuery(undefined, {
+    refetchOnMount: false,
+    refetchInterval: 3000 * 1000, // 50 minutes
+    refetchOnWindowFocus: false,
+    enabled: !file,
+  });
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];

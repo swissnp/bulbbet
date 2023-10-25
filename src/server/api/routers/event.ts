@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { eventCreateSchema } from "~/utils/validator/userInput";
-import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
+import { createTRPCRouter, protectedProcedure, publicProcedure } from "~/server/api/trpc";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { PutObjectCommand } from "@aws-sdk/client-s3";
 import { env } from "~/env.mjs";
@@ -22,7 +22,6 @@ export const eventRouter = createTRPCRouter({
       return result;
     }),
   getPresignedUrl: protectedProcedure
-    .input(z.object({}))
     .query(async ({ ctx }) => {
       const fileName = `${ctx.session.user.id}/${Date.now()}.jpeg`;
       const url = await getSignedUrl(
@@ -38,10 +37,25 @@ export const eventRouter = createTRPCRouter({
       return { url, fileName };
     }),
   getMyEvents: protectedProcedure
-    .input(z.object({}))
     .query(async ({ ctx }) => {
       const result = await db.event.findMany({
         where: { createdBy: { id: ctx.session.user.id } },
+        orderBy: { resolutedAt: "asc" },
+      });
+      return result;
+    }),
+  getEventData: publicProcedure
+    .input(z.object({ id: z.string() }))
+    .query(async ({ input }) => {
+      const result = await db.event.findFirst({
+        where: { id: input.id },
+      });
+      return result;
+    }),
+  getAllEventsId: publicProcedure
+    .query(async () => {
+      const result = await db.event.findMany({
+        select: { id: true },
         orderBy: { resolutedAt: "asc" },
       });
       return result;

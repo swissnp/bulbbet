@@ -5,7 +5,7 @@ import CountDown from "~/components/Countdown";
 import { getServerAuthSession } from "~/server/auth";
 import type { GetServerSidePropsContext } from "next";
 const CreatedEventHistory = () => {
-  const { data: events } = api.event.getMyEvents.useQuery({});
+  const { data: events } = api.event.getMyEvents.useQuery(undefined);
 
   return (
     <div className="bg-base-100 flex min-h-screen flex-col items-center ">
