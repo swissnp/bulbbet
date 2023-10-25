@@ -3,7 +3,7 @@ import Head from "next/head";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import Header from "~/components/Header";
-import { AnimateOnScroll } from "~/utils/validator/hooks/VisibilityHook";
+import { AnimateOnScroll } from "~/utils/hooks/VisibilityHook";
 import { api } from "~/utils/api";
 
 export default function Home() {
