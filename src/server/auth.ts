@@ -5,7 +5,8 @@ import {
   type DefaultSession,
   type NextAuthOptions,
 } from "next-auth";
-import DiscordProvider from "next-auth/providers/discord";
+// import DiscordProvider from "next-auth/providers/discord";
+import EmailProvider from "next-auth/providers/email";
 
 import { env } from "~/env.mjs";
 import { db } from "~/server/db";
@@ -45,13 +46,32 @@ export const authOptions: NextAuthOptions = {
         id: user.id,
       },
     }),
+    // signIn: ({ user }) => {
+    //   if (!user.email?.endsWith("chula.ac.th")) {
+    //     return false;
+    //   }
+    //   return true;
+    // }
   },
   adapter: PrismaAdapter(db),
+  // session: { strategy: "jwt" },
   providers: [
-    DiscordProvider({
-      clientId: env.DISCORD_CLIENT_ID,
-      clientSecret: env.DISCORD_CLIENT_SECRET,
+    EmailProvider({
+      server: {
+        host: env.EMAIL_SERVER_HOST,
+        port: env.EMAIL_SERVER_PORT,
+        auth: {
+          user: env.EMAIL_SERVER_USER,
+          pass: env.EMAIL_SERVER_PASSWORD,
+        },
+      },
+      from: env.EMAIL_FROM,
     }),
+    // DiscordProvider({
+    //   clientId: env.DISCORD_CLIENT_ID,
+    //   clientSecret: env.DISCORD_CLIENT_SECRET,
+    // }),
+
     /**
      * ...add more providers here.
      *
@@ -62,6 +82,10 @@ export const authOptions: NextAuthOptions = {
      * @see https://next-auth.js.org/providers/github
      */
   ],
+  pages: {
+    signIn: '/auth/login',
+    verifyRequest: '/auth/verify-request', // (used for check email message)
+  },
 };
 
 /**
