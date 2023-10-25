@@ -2,6 +2,7 @@
 // A sign in link has been sent to your email address. Please check your inbox or junk box and click on the link to verify your email.
 // create a page that have this message centered
 import Head from "next/head";
+import Link from "next/link";
 export default function Verify() {
   return (
     <>
@@ -23,6 +24,12 @@ export default function Verify() {
               click on the link to sign in with your email.
             </p>
           </div>
+          <Link
+            href="https://outlook.office365.com/"
+            className="btn btn-primary"
+          >
+            Go to Outlook
+          </Link>
         </div>
       </main>
     </>
