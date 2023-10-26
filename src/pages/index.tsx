@@ -3,50 +3,34 @@ import Header from "~/components/Header";
 import { AnimateOnScroll } from "~/utils/hooks/VisibilityHook";
 import Carousel from "~/components/Carousel";
 import Tutorial from "~/components/Tutorial";
+import Link from "next/link";
+import { api } from "~/utils/api";
 
 export default function Home() {
+  const { data } = api.event.getTrending.useQuery(undefined);
   return (
     <div className="pt-28">
       <div className="fixed top-0 z-50">
         <Header />
       </div>
       <Hero />
-      <div className="ml-4 text-2xl font-bold">Trending events</div>
-      <div className="mt-5 w-full">
-        <Carousel
-          // img={[
-          // "https://www.cnet.com/a/img/resize/20d6844768bd3f5f0df41deee97897423bcaf3c5/hub/2021/11/03/3c2a7d79-770e-4cfa-9847-66b3901fb5d7/c09.jpg?auto=webp&fit=crop&height=1200&width=1200",
-          // "https://community-lens.storage.googleapis.com/preview-media/thumbnail_poster/a8892413-3bec-4f3d-b4ef-02e56cc540bc.jpg",
-          // "https://m.media-amazon.com/images/I/31GEsNVK8dL._AC_UF1000,1000_QL80_.jpg",
-          // "https://m.media-amazon.com/images/I/51XISp6ViuL._AC_UF894,1000_QL80_.jpg",
-          // "https://i.chzbgr.com/full/9743959040/h39973DB8/dog-inside-now-my-dog",
-          // "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTZDp6C_WCdCnXGwObacXyxQNpLtxf1eMZxuA&usqp=CAU"
-          // ]}
-          img={[
-            "https://www.cnet.com/a/img/resize/20d6844768bd3f5f0df41deee97897423bcaf3c5/hub/2021/11/03/3c2a7d79-770e-4cfa-9847-66b3901fb5d7/c09.jpg?auto=webp&fit=crop&height=1200&width=1200",
-            "https://community-lens.storage.googleapis.com/preview-media/thumbnail_poster/a8892413-3bec-4f3d-b4ef-02e56cc540bc.jpg",
-            "https://m.media-amazon.com/images/I/31GEsNVK8dL._AC_UF1000,1000_QL80_.jpg",
-            "https://m.media-amazon.com/images/I/51XISp6ViuL._AC_UF894,1000_QL80_.jpg",
-            "https://i.chzbgr.com/full/9743959040/h39973DB8/dog-inside-now-my-dog",
-            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTZDp6C_WCdCnXGwObacXyxQNpLtxf1eMZxuA&usqp=CAU",
-            "https://m.media-amazon.com/images/I/31GEsNVK8dL._AC_UF1000,1000_QL80_.jpg",
-            "https://www.cnet.com/a/img/resize/20d6844768bd3f5f0df41deee97897423bcaf3c5/hub/2021/11/03/3c2a7d79-770e-4cfa-9847-66b3901fb5d7/c09.jpg?auto=webp&fit=crop&height=1200&width=1200",
-          ]}
-        />
+      <div>
+        <div className="flex justify-between px-12 text-4xl font-bold">
+          <div>📈 Trending events</div>
+          <Link href="/listings">
+            <div className="btn btn-secondary btn-outline">View all</div>
+          </Link>
+        </div>
+        <div className="w-full pt-5">
+          <div className="mx-10 overflow-scroll rounded-lg bg-neutral py-10">
+            {data && <Carousel trendingData={data} />}
+          </div>
+        </div>
       </div>
-      {/* <div className="ml-4 text-2xl font-bold">Ongoing events</div>
-      <div className="w-full mt-5">
-        <Collection img={[
-        "https://www.cnet.com/a/img/resize/20d6844768bd3f5f0df41deee97897423bcaf3c5/hub/2021/11/03/3c2a7d79-770e-4cfa-9847-66b3901fb5d7/c09.jpg?auto=webp&fit=crop&height=1200&width=1200",
-        "https://community-lens.storage.googleapis.com/preview-media/thumbnail_poster/a8892413-3bec-4f3d-b4ef-02e56cc540bc.jpg",
-        "https://m.media-amazon.com/images/I/31GEsNVK8dL._AC_UF1000,1000_QL80_.jpg",
-        "https://m.media-amazon.com/images/I/51XISp6ViuL._AC_UF894,1000_QL80_.jpg",
-        "https://i.chzbgr.com/full/9743959040/h39973DB8/dog-inside-now-my-dog",
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTZDp6C_WCdCnXGwObacXyxQNpLtxf1eMZxuA&usqp=CAU"
-      ]} />
-      </div> */}
-      <div className="mt-8 w-full bg-base-200">
-        <Tutorial />
+      <div className="w-full items-center justify-center pt-10">
+        <div className="bg-base-200">
+          <Tutorial />
+        </div>
       </div>
     </div>
   );
@@ -97,7 +81,7 @@ const Hero = () => {
           <AnimateOnScroll reappear={true}>
             <h1 className="items-center justify-center text-5xl sm:text-7xl">
               Bet on
-              <span className="block h-[calc(theme(fontSize.5xl)*theme(lineHeight.tight))] flex-col overflow-hidden text-secondary-focus md:h-[calc(theme(fontSize.7xl)*theme(lineHeight.tight))]">
+              <span className="block h-[calc(theme(fontSize.5xl)*theme(lineHeight.tight))] flex-col overflow-hidden text-secondary md:h-[calc(theme(fontSize.7xl)*theme(lineHeight.tight))]">
                 <ul className="block animate-text-slide text-center leading-tight [&_li]:block">
                   <li>
                     Futures
@@ -141,7 +125,6 @@ const Hero = () => {
           <h1 className="inline whitespace-nowrap text-6xl font-bold sm:text-8xl">
             Bulbbet
           </h1>
-
           <AnimateOnScroll
             reappear={true}
             className="absolute -top-14 right-2 text-7xl sm:-right-16 sm:-top-28 lg:-right-32 lg:-top-20 lg:text-9xl"
@@ -177,8 +160,24 @@ const Hero = () => {
             {emoji[3]}
           </AnimateOnScroll>
           <p className="py-6 text-3xl">Put your 💡 where your mouth is</p>
-          {/* </AnimateOnScroll> */}
-          {/* <button className="btn btn-primary">Install Our App</button> */}
+          <Link className="btn btn-primary" href={"/listings"}>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              className="lucide lucide-sticky-note text-primary-content"
+            >
+              <path d="M15.5 3H5a2 2 0 0 0-2 2v14c0 1.1.9 2 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3Z" />
+              <path d="M15 3v6h6" />
+            </svg>
+            See Our Listings
+          </Link>
         </div>
       </div>
     </div>
