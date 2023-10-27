@@ -17,7 +17,7 @@ export default function Home() {
       </Head>
       <main className=" flex min-h-screen flex-col items-center justify-center">
         <Header />
-        <div className="pt-28">
+        <div className="pt-20">
           <Hero />
         </div>
         <div className="w-full">

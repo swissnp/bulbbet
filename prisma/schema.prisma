@@ -99,6 +99,8 @@ model EventHistory {
     event Event @relation(fields: [eventId], references: [id])
     isAgree Boolean 
     agreePrice Decimal 
+    shareAmount Int
+    TotalPrice Decimal
     createdAt DateTime @default(now())
     boughtById String
     boughtBy   User   @relation(fields: [boughtById], references: [id])
