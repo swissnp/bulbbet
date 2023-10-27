@@ -85,7 +85,7 @@ model Event {
     createdBy   User   @relation(fields: [createdById], references: [id])
     createdById String
     imageUrl String
-    nextAgreePrice Decimal @default(0.5)
+    nextAgreePrice Decimal @default(50)
     eventHistories EventHistory[]
     resolutions Resolution[]
 
@@ -100,7 +100,7 @@ model EventHistory {
     isAgree Boolean 
     agreePrice Decimal 
     shareAmount Int
-    TotalPrice Decimal
+    totalPrice Decimal
     createdAt DateTime @default(now())
     boughtById String
     boughtBy   User   @relation(fields: [boughtById], references: [id])
