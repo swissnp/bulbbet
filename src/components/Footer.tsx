@@ -1,4 +1,4 @@
-export const Footer = () => {
+const Footer = () => {
   return (
     <footer className="footer footer-center rounded bg-base-200 p-10 text-base-content">
       <nav className="grid grid-flow-col gap-4">
@@ -50,3 +50,4 @@ export const Footer = () => {
     </footer>
   );
 };
+export default Footer;

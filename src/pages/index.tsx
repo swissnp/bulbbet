@@ -6,6 +6,7 @@ import { AnimateOnScroll } from "~/utils/hooks/VisibilityHook";
 import { api } from "~/utils/api";
 import Carousel from "~/components/Carousel";
 import Tutorial from "~/components/Tutorial";
+import Footer from "~/components/Footer";
 
 export default function Home() {
   return (
@@ -28,6 +29,7 @@ export default function Home() {
             <Tutorial />
           </div>
         </div>
+        <Footer />
       </main>
     </>
   );
