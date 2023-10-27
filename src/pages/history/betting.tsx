@@ -42,7 +42,7 @@ const BettingHistory = () => {
                     {history.agreePrice.toString()}
                   </p>
                   <p className="text-center text-lg">
-                    {1.0 - parseFloat(history.agreePrice.toString())}
+                    {100 - parseFloat(history.agreePrice.toString())}
                   </p>
                 </div>
                 <div className="card-body">

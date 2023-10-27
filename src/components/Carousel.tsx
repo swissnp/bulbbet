@@ -42,7 +42,7 @@ const Carousel = ({
                     Yes {nextAgreePrice.toString()}💡{" "}
                   </span>
                   <span className="text-error">
-                    No {1.0 - parseFloat(nextAgreePrice.toString())}💡
+                    No {100 - parseFloat(nextAgreePrice.toString())}💡
                   </span>
                 </div>
               </div>

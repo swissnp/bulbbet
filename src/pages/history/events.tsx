@@ -8,7 +8,7 @@ const CreatedEventHistory = () => {
   const { data: events } = api.event.getMyEvents.useQuery(undefined);
 
   return (
-    <div className="bg-base-100 flex min-h-screen flex-col items-center ">
+    <div className="flex min-h-screen flex-col items-center bg-base-100 ">
       <Header />
       <div className="pt-28">
         <h1 className="px-5 py-3 pb-10 text-3xl font-extrabold tracking-tight text-white sm:text-[3rem]">
@@ -17,7 +17,7 @@ const CreatedEventHistory = () => {
         <div className="grid grid-cols-1 gap-4 gap-x-5 px-4 pb-10 md:grid-cols-2 lg:grid-cols-3">
           {events?.map((event) => {
             return (
-              <div className="card bg-base-200 w-full shadow-xl" key={event.id}>
+              <div className="card w-full bg-base-200 shadow-xl" key={event.id}>
                 <div>
                   <div className="flex h-72 w-full flex-grow-0 overflow-hidden rounded-t-xl lg:h-96 lg:w-96 ">
                     <Image
@@ -30,7 +30,7 @@ const CreatedEventHistory = () => {
                   </div>
                 </div>
                 <progress
-                  className="progress progress-success flex-inline bg-error flex w-full"
+                  className="flex-inline progress progress-success flex w-full bg-error"
                   value={event.nextAgreePrice.toString()}
                   max="1"
                 ></progress>
@@ -39,7 +39,7 @@ const CreatedEventHistory = () => {
                     {event.nextAgreePrice.toString()}
                   </p>
                   <p className="text-center text-lg">
-                    {1.0 - parseFloat(event.nextAgreePrice.toString())}
+                    {100 - parseFloat(event.nextAgreePrice.toString())}
                   </p>
                 </div>
                 <div className="card-body">
@@ -66,7 +66,7 @@ const CreatedEventHistory = () => {
             );
           })}
           {events?.length == 0 && (
-            <div className="card bg-base-200 w-96 shadow-xl">
+            <div className="card w-96 bg-base-200 shadow-xl">
               <div className="card-body">
                 <h2 className="card-title">No Event</h2>
                 <p>There is no event created by you.</p>
