@@ -137,7 +137,7 @@ const Header = () => {
                 ) : (
                   <div>
                     <li>
-                      <Link href="/history/betting">Betting History</Link>
+                      <Link href="/history/bettings">Betting History</Link>
                     </li>
                     <li>
                       <Link href="/history/events">Event History</Link>
