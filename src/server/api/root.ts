@@ -1,7 +1,7 @@
 import { postRouter } from "~/server/api/routers/post";
 import { createTRPCRouter } from "~/server/api/trpc";
 import { eventRouter } from "./routers/event";
-
+import { betRouter } from "./routers/bet";
 /**
  * This is the primary router for your server.
  *
@@ -9,7 +9,8 @@ import { eventRouter } from "./routers/event";
  */
 export const appRouter = createTRPCRouter({
   post: postRouter,
-  event: eventRouter
+  event: eventRouter,
+  bet: betRouter
 });
 
 // export type definition of API
