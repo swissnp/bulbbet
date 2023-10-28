@@ -1,4 +1,3 @@
-// import { z } from "zod";
 import {
   createTRPCRouter,
   protectedProcedure,
@@ -6,12 +5,11 @@ import {
 import { db } from "~/server/db";
 
 export const betRouter = createTRPCRouter({
-  getMyBets: protectedProcedure
-  .query(async ({ ctx }) => {
+  getMyBets: protectedProcedure.query(async ({ ctx }) => {
     const result = await db.eventHistory.findMany({
       where: { boughtById: ctx.session.user.id },
       orderBy: { createdAt: "desc" },
-      select:{
+      select: {
         id: true,
         isAgree: true,
         createdAt: true,
@@ -19,10 +17,11 @@ export const betRouter = createTRPCRouter({
         totalPrice: true,
         shareAmount: true,
         event: true,
-      }
+      },
     });
     return result;
   }),
+
   // purchase: protectedProcedure
   // .input(z.object({
   //   eventId: z.string(),
@@ -37,4 +36,4 @@ export const betRouter = createTRPCRouter({
   //   // calculate the next price
   //   const pricePerShare = isAgree ? shareAmount : 100 - shareAmount;
   // })
-})
+});

@@ -97,13 +97,26 @@ export default function Create() {
             <p className="text-lg">How It will Resolute</p>
             <input
               type="text"
-              placeholder="Description"
+              placeholder="Resolution Details"
               className="input input-bordered w-full"
               {...register("resolutionDetails")}
             />
             {errors.resolutionDetails && (
               <p className="text-sm text-error">
                 {errors.resolutionDetails?.message}
+              </p>
+            )}
+          </div>
+          <div className="grid grid-cols-1 gap-1">
+            <p className="text-lg">Event Desciption</p>
+            <textarea
+              placeholder="Description"
+              className="textarea textarea-bordered h-20 w-full"
+              {...register("description")}
+            />
+            {errors.description && (
+              <p className="text-sm text-error">
+                {errors.description?.message}
               </p>
             )}
           </div>

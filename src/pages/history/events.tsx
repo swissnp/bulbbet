@@ -32,7 +32,7 @@ const CreatedEventHistory = () => {
                 <progress
                   className="flex-inline progress progress-success flex w-full bg-error"
                   value={event.nextAgreePrice.toString()}
-                  max="1"
+                  max="100"
                 ></progress>
                 <div className="flex w-full flex-row justify-between px-1">
                   <p className="text-center text-lg">

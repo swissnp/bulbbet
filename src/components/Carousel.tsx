@@ -35,7 +35,7 @@ const Carousel = ({
                 <progress
                   className="flex-inline progress progress-success flex w-full bg-error"
                   value={nextAgreePrice.toString()}
-                  max="1"
+                  max="100"
                 ></progress>
                 <div className="flex w-full justify-between px-1 text-base font-semibold">
                   <span className="text-success">

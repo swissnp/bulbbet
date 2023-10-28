@@ -8,7 +8,8 @@ export const eventCreateSchema = z.object({
     })
     .min(new Date(), { message: "Resolution date must be later" }),
   resolutionDetails: z.string().min(1),
-  fileName: z.string().min(1,{message: "Please upload a file"})
+  fileName: z.string().min(1,{message: "Please upload a file"}),
+  description: z.string().min(1),
 });
 export type IEventCreateSchema = z.infer<typeof eventCreateSchema>;
 
@@ -17,3 +18,11 @@ export const VerificationEmailSchema = z.object({
   // .endsWith("chula.ac.th", "Email must be chula.ac.th"),
 });
 export type IVerificationEmail = z.infer<typeof VerificationEmailSchema>;
+
+export const PurchaseSchema = z.object({
+  eventId: z.string({required_error: "Please select an event"}),
+  isAgree: z.boolean({required_error: "Please select agree or disagree"}),
+  shareAmount: z.number().min(1, {message: "You must buy at least 1 share"}),
+})
+
+export type IPurchaseSchema = z.infer<typeof PurchaseSchema>;

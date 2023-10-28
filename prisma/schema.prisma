@@ -59,6 +59,7 @@ model User {
     email         String?   @unique
     emailVerified DateTime?
     image         String?
+    amount        Decimal   @default(10000)
     accounts      Account[]
     sessions      Session[]
     posts         Post[]
@@ -80,8 +81,9 @@ model Event {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
     isResoluted Boolean @default(false)
-    resolutedAt DateTime?
-    resolutionDetails String?
+    resolutedAt DateTime 
+    resolutionDetails String
+    description String @db.Text
     createdBy   User   @relation(fields: [createdById], references: [id])
     createdById String
     imageUrl String

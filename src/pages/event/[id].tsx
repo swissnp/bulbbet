@@ -1,262 +1,196 @@
 import React from "next/router";
 import Head from "next/head";
-// import { useRouter } from "next/router";
+import { useRouter } from "next/router";
 import Header from "~/components/Header";
+import Image from "next/image";
 
-const ProductPage = () => {
-  // const [error, setError] = useState<string>("");
-  // const [state, setState] = useState<{ loading: boolean }>({
-  //   loading: false,
-  // });
-  // const [submitted, setSubmitted] = useState<boolean>(false);
-  // const [formSelection, setSelection] = useState<{
-  //   color: string | null;
-  //   size: SelectValue | null;
-  //   sizeValue: string | null;
-  //   qty: number;
-  // }>({ color: null, size: null, sizeValue: null, qty: 1 });
+import { Test } from "~/components/Chart";
+import { api } from "~/utils/api";
+import { useForm, Controller } from "react-hook-form";
+import {
+  type IPurchaseSchema,
+  PurchaseSchema,
+} from "~/utils/validator/userInput";
+import { db } from "~/server/db";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { type GetStaticPaths, type GetStaticPropsContext } from "next";
+import { appRouter } from "~/server/api/root";
+import { createServerSideHelpers } from "@trpc/react-query/server";
+import superjson from "superjson";
+import Carousel from "~/components/Carousel";
 
-  // this will set the state when there is only one color
-  // useEffect(() => {
-  //   productData.options.map((option) => {
-  //     if (option.title === "Color") {
-  //       if (option.selections.length === 1) {
-  //         // if there is only one color, set it to state
-  //         setSelection({
-  //           ...formSelection, // destructuring the old state
-  //           color: option?.selections[0]?.description || null, // set color to new state
-  //         });
-  //       }
-  //     }
-  //   });
-  // }, [productData.options]); // dont need formSelection because we need to set it only once when the page is loaded and not when the state is changed
-
-  // const { mutateAsync } = api.cart.add.useMutation();
-  // const router = useRouter();
-
-  // const onSubmit = async (data: IAddToCart) => {
-  //   if (!formSelection.color) {
-  //     setError("Please select a color");
-  //     return;
-  //   } else if (!formSelection.sizeValue) {
-  //     setError("Please select a size");
-  //     return;
-  //   } else if (formSelection.qty < 1) {
-  //     setError("Please select a quantity");
-  //     return;
-  //   } else {
-  //     try {
-  //       setState({ loading: true });
-  //       await mutateAsync(data);
-  //     } catch (error) {
-  //       if (isTRPCClientError(error)) {
-  //         if (error.data?.code === "UNAUTHORIZED") {
-  //           await router.push({
-  //             pathname: "/login",
-  //             query: {
-  //               message: "Unauthorize, Please login first.",
-  //               redirect: router.asPath,
-  //             },
-  //           });
-  //         } else {
-  //           setError(error.message);
-  //         }
-  //       }
-  //     }
-  //   }
-  //   toast.success("Product added to the cart", {
-  //     position: "top-center",
-  //     autoClose: 3000,
-  //     hideProgressBar: false,
-  //     closeOnClick: true,
-  //     pauseOnHover: true,
-  //     draggable: true,
-  //     progress: undefined,
-  //   });
-  //   setState({ loading: false });
-  //   setError("");
-  // };
+const EventPage = () => {
+  const router = useRouter();
+  const trendingData = api.event.getTrending.useQuery(undefined);
+  const { data } = api.event.getEventById.useQuery(
+    {
+      id: router.query.id as string,
+    },
+    {
+      enabled: !!router.query.id,
+    },
+  );
+  const {
+    register,
+    handleSubmit,
+    getValues,
+    control,
+    watch,
+    formState: { errors, isValid, isSubmitting },
+  } = useForm<IPurchaseSchema>({
+    resolver: zodResolver(PurchaseSchema),
+    defaultValues: {
+      eventId: router.query.id as string,
+      isAgree: undefined,
+      shareAmount: 10,
+    },
+    mode: "onBlur",
+  });
 
   return (
     <>
       <Head>
-        <title>{" - HappyKids"}</title>
+        <title>💡🎰 Bulbbet</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className=" flex min-h-screen w-screen flex-col">
         <Header />
         <div className="relative mt-24 flex flex-col justify-center px-4">
-          <div className="bg-neutral-focus mb-5 flex flex-col overflow-hidden rounded-xl shadow-2xl">
+          <div className="mb-5 flex flex-col overflow-hidden rounded-xl bg-neutral-focus shadow-2xl">
             <div className="hero bg-neutral">
-              <div className="hero-content w-full flex-col p-0 md:flex-row md:px-5 md:py-10">
-                <div className="h-[30rem] w-full overflow-hidden object-center md:w-[30rem] md:justify-items-center md:rounded-3xl md:align-middle md:drop-shadow-xl">
-                  {/* {productData ? (
-                  <Carousel
-                    mediaList={productData.media.map((item) => {
-                      return { ...item, url: item.fullUrl };
-                    })}
-                    sku={productData.sku}
-                    classNameDiv="h-[30rem] w-full overflow-hidden md:w-[30rem] md:rounded-3xl md:drop-shadow-xl"
-                  />
-                ) : (
-                  <progress className="progress w-56 align-middle"></progress>
-                )} */}
+              <div className="hero-content flex w-full flex-col overflow-hidden p-0 md:flex-row md:px-5 md:py-10">
+                <div className="h-[30rem] w-full overflow-hidden md:w-[30rem] md:justify-items-center md:rounded-3xl md:align-middle md:drop-shadow-xl">
+                  <div className="relative h-full w-full">
+                    <Image
+                      src={data?.imageUrl ?? ""}
+                      alt="Picture of this event"
+                      fill
+                      className="-z-10 object-cover"
+                    />
+                  </div>
                 </div>
                 <div className="w-full px-10 py-10 md:w-1/2 md:px-10">
-                  <h1 className="w-full text-ellipsis  pb-3 text-5xl font-bold">
-                    I am a product
-                    {/* {productData?.name}
-                    {productData.ribbon && (
-                      <div className="badge-accent badge mx-5 align-middle">
-                        {productData.ribbon}
-                      </div>
-                    )} */}
+                  <h1 className="w-full text-ellipsis pb-6 text-5xl font-bold">
+                    {data?.name}
                   </h1>
-
-                  <p className="text-ellipsis pb-3">jkaksdfkjasdfjk</p>
-                  <div className="whitespace-nowrap pb-3">
-                    <p
-                    // className={`${
-                    //   productData.discountedPrice != productData.price
-                    //     ? "decoration-error line-through"
-                    //     : ""
-                    // } inline`}
-                    >
-                      {/* {productData.formattedPrice} */}
-                    </p>
-                    {/* {productData.discountedPrice != productData.price && (
-                      <p className=" inline">{` → ${productData.formattedDiscountedPrice}`}</p>
-                    )} */}
-                  </div>
-                  <div className="mb-5">
-                    <div className="flex flex-wrap gap-x-5">
-                      {/* {productData.options.map((option) => {
-                        if (option.title === "Color") {
-                          if (option.selections.length > 1) {
-                            // if there is only 1 color option then dont show the color option
-                            return (
-                              <div key={option.title}>
-                                <p className="mb-1">Color</p>
-                                {option.selections.map((selection) => {
-                                  return (
-                                    <input
-                                      key={selection.key}
-                                      type="radio"
-                                      name="radio-7"
-                                      style={{
-                                        backgroundColor: selection.value, // shouldnt do this but tailwind cant change class after build time
-                                        // borderColor: selection.value,
-                                      }}
-                                      // href={`#slide${productData.sku}${selection.linkedMediaItems[0]?.index || 0}`}
-                                      value={selection.description}
-                                      onClick={(e) => {
-                                        location.href = `#slide${
-                                          productData.sku
-                                        }${
-                                          selection.linkedMediaItems[0]
-                                            ?.index || 0
-                                        }`;
-                                        setSelection({
-                                          ...formSelection, // destructuring the old state
-                                          color: (e.target as HTMLInputElement)
-                                            .value, // set new color to state
-                                        });
-                                      }}
-                                      className={`radio mr-2`}
-                                    ></input>
-                                  );
-                                })}
-                              </div>
-                            );
+                  <Controller
+                    control={control}
+                    name="isAgree"
+                    render={({ field: { onChange, onBlur, value, ref } }) => (
+                      <div className="join text-ellipsis">
+                        <input
+                          className="btn join-item btn-sm text-ellipsis checked:!btn-success"
+                          type="radio"
+                          onBlur={onBlur} // notify when input is touched
+                          onChange={() => onChange(true)} // send value to hook form
+                          checked={value === true}
+                          ref={ref}
+                          aria-label={
+                            "Yes: " + (data?.nextAgreePrice ?? 0).toString()
                           }
-                        } else {
-                          return (
-                            <div key={option.title} className="mb-1 h-20 w-40">
-                              <p className="mb-1">Size</p>
-                              <Select
-                                primaryColor={"blue"}
-                                value={formSelection?.size}
-                                onChange={(value: SelectValue) => {
-                                  const size = value as {
-                                    value: string;
-                                    label: string;
-                                  };
-                                  setSelection({
-                                    ...formSelection, // destructuring the old state
-                                    size: value, // set color to new state
-                                    sizeValue: size.value,
-                                  });
-                                }}
-                                options={option.selections.map((selection) => {
-                                  return {
-                                    value: selection.value,
-                                    label: selection.description,
-                                  };
-                                })}
-                              />
-                            </div>
-                          );
-                        }
-                      })} */}
-                      <div className="mb-1 h-20 w-40">
-                        <p className="mb-1">Quantity</p>
+                        />
+                        <input
+                          className="btn join-item btn-sm text-ellipsis checked:!btn-error"
+                          type="radio"
+                          onBlur={onBlur} // notify when input is touched
+                          onChange={() => onChange(false)} // send value to hook form
+                          checked={value === false}
+                          ref={ref}
+                          aria-label={
+                            "No: " +
+                            (
+                              100 -
+                              (parseFloat(
+                                (data?.nextAgreePrice ?? 0).toString() ?? "0",
+                              ) ?? 0)
+                            ).toString()
+                          }
+                        />
+                      </div>
+                    )}
+                  />
+                  {errors.isAgree && (
+                    <div className="pt-1 text-sm text-error">
+                      {errors.isAgree.message}
+                    </div>
+                  )}
+                  <div className="pt-3">
+                    <div className="flex flex-wrap">
+                      <div className="">
+                        <p className="mb-1">Shares</p>
                         <input
                           type="number"
-                          className="input-bordered input bg-neutral text-neutral-content h-10 w-20 rounded-md"
+                          className="input input-bordered h-10 w-20 rounded-md bg-neutral text-neutral-content"
                           inputMode="numeric"
                           min="1"
-                          defaultValue={"1"}
+                          defaultValue={"10"}
                           max="100"
-                          // onChange={(e) => {
-                          //   setSelection({
-                          //     ...formSelection,
-                          //     qty: parseInt(e.target.value),
-                          //   });
-                          // }}
+                          {...register("shareAmount", {
+                            valueAsNumber: true,
+                          })}
                         ></input>
                       </div>
                     </div>
-                    {/* {error && <p className="text-error text-sm">{error}</p>} */}
+                    {errors.shareAmount && (
+                      <p className="pt-1 text-sm text-error">
+                        {errors.shareAmount.message}
+                      </p>
+                    )}
                   </div>
-                  <button
-                    className={`btn-primary btn relative 
+                  <div className="pt-3">
+                    <button
+                      className={`btn btn-primary relative ${
+                        isSubmitting && "loading loading-spinner"
+                      }
                     `}
-                    // onClick={async () => {
-                    //   setSubmitted(false);
-                    //   await onSubmit({
-                    //     sku: productData.sku,
-                    //     qty: formSelection.qty,
-                    //     color: formSelection.color || "",
-                    //     size: formSelection.sizeValue || "",
-                    //     price: productData.price,
-                    //     discountedPrice: productData.discountedPrice,
-                    //     name: productData.name,
-                    //   });
-                    //   setSubmitted(true);
-                    // }}
-                  >
-                    {"PURCHASE"}
-                  </button>
+                      onClick={() => {
+                        console.log(getValues());
+                        console.log(errors);
+                      }}
+                    >
+                      {"PURCHASE"}
+                    </button>
+                    {isValid && (
+                      <div className="inline pl-4">
+                        Total:{" "}
+                        {(watch("isAgree")
+                          ? data?.nextAgreePrice ?? 0
+                          : 100 - (data?.nextAgreePrice ?? 0)) *
+                          watch("shareAmount")}
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
-            <div className="mx-10 my-14 flex flex-col gap-10 md:m-20 md:flex-row">
-              {/* {productData?.additionalInfo?.map((info) => {
-                return (
-                  <div className="w-full" key={info.id}>
-                    <div className="flex w-full flex-col">
-                      <h1 className="mb-3 text-2xl font-bold">{info.title}</h1>
-                      {info.description.slice(3, -5)}
-                    </div>
+            <div className="gap-10 px-5 py-7 md:p-20 md:px-10 md:py-14">
+              <div className="flex flex-col gap-5 md:flex-row">
+                <div className="w-full">
+                  <div className="flex w-full flex-col">
+                    <h1 className="mb-3 text-2xl font-bold">
+                      {"Resoluttion Details"}
+                    </h1>
+                    {data?.resolutionDetails ?? ""}
                   </div>
-                );
-              })} */}
+                </div>
+                <div className="w-full">
+                  <div className="flex w-full flex-col">
+                    <h1 className="mb-3 text-2xl font-bold">{"Description"}</h1>
+                    {data?.description ?? ""}
+                  </div>
+                </div>
+              </div>
+              <div className="divider py-5"></div>
+              <div className="h-80">
+                <div className="pb-5 text-2xl font-bold">Pricing Graph</div>
+                <Test id={router.query.id as string} />
+              </div>
             </div>
           </div>
-          <div className="bg-base-100 flex w-full  flex-col items-center justify-center rounded-xl drop-shadow-lg">
-            <h1 className="my-10 text-4xl font-bold ">Related Products</h1>
-            <div className="w-full overflow-scroll">
-              {/* <Collection response={res} /> */}
+          <div className="mb-5 flex w-full flex-col items-center justify-center rounded-xl bg-neutral-focus drop-shadow-lg">
+            <h1 className="py-10 text-4xl font-bold ">Trending Events</h1>
+            <div className="hide-scroll w-full overflow-scroll pb-7 pt-3">
+              <Carousel trendingData={trendingData.data ?? []} />
             </div>
           </div>
         </div>
@@ -266,33 +200,43 @@ const ProductPage = () => {
   );
 };
 
-// export async function getStaticPaths() {
-//   const paths = await getSku();
-//   return {
-//     paths,
-//     fallback: false,
-//   };
-// }
+export const getStaticPaths: GetStaticPaths = async () => {
+  const events = await db.event.findMany({
+    select: {
+      id: true,
+    },
+  });
+  return {
+    paths: events.map((event) => ({
+      params: {
+        id: event.id,
+      },
+    })),
+    // https://nextjs.org/docs/pages/api-reference/functions/get-static-paths#fallback-blocking
+    fallback: "blocking",
+  };
+};
 
-// export async function getStaticProps({ params }: { params: { sku: string } }) {
-//   const productData = await getProductData(params.sku);
-//   const res = await fetch(
-//     "https://skillkamp-api.com/v1/api/products/new_arrivals",
-//   )
-//     .then((response) => response.json()) // convert json string to object
-//     .then((data: INewArrivalSchema) => {
-//       return data.detail.data.catalog.category.productsWithMetaData.list;
-//     })
-//     .catch((err) => {
-//       console.log(err);
-//     });
-
-//   return {
-//     props: {
-//       productData,
-//       res,
-//     },
-//     revalidate: 60,
-//   };
-// }
-export default ProductPage;
+export async function getStaticProps(
+  context: GetStaticPropsContext<{ id: string }>,
+) {
+  const helpers = createServerSideHelpers({
+    router: appRouter,
+    ctx: { db: db, session: null },
+    transformer: superjson, // optional - adds superjson serialization
+  });
+  const id = context.params?.id;
+  // prefetch `post.byId`
+  if (!id) {
+    throw new Error("id not found");
+  }
+  await helpers.event.getEventById.prefetch({ id });
+  return {
+    props: {
+      trpcState: helpers.dehydrate(),
+      id,
+    },
+    revalidate: 60,
+  };
+}
+export default EventPage;

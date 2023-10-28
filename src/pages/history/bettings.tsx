@@ -20,12 +20,12 @@ const BettingHistory = () => {
                 key={history.id}
               >
                 <div>
-                  <div className="flex h-72 w-full flex-grow-0 overflow-hidden rounded-t-xl lg:h-96 lg:w-96 ">
+                  <div className="flex h-72 w-72 flex-grow-0 overflow-hidden rounded-t-xl">
                     <Image
                       src={history.event.imageUrl}
                       alt="Picture of this event"
-                      height={384}
-                      width={384}
+                      height={288}
+                      width={288}
                       className="object-cover"
                     />
                   </div>
@@ -35,7 +35,7 @@ const BettingHistory = () => {
                     true ? "progress-success" : "bg-error"
                   } flex w-full`}
                   value={history.agreePrice.toString()}
-                  max="1"
+                  max="100"
                 ></progress>
                 <div className="flex w-full flex-row justify-between px-1">
                   <p className="text-center text-lg">

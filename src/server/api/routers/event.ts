@@ -10,6 +10,7 @@ import { PutObjectCommand } from "@aws-sdk/client-s3";
 import { env } from "~/env.mjs";
 import s3 from "~/server/s3";
 import { db } from "~/server/db";
+import { TRPCError } from "@trpc/server";
 export const eventRouter = createTRPCRouter({
   createEvent: protectedProcedure
     .input(eventCreateSchema)
@@ -21,6 +22,7 @@ export const eventRouter = createTRPCRouter({
           resolutedAt: input.resolutedAt,
           resolutionDetails: input.resolutionDetails,
           imageUrl: env.S3_PUBLIC_URL + "/" + input.fileName,
+          description: input.description,
         },
       });
       return result;
@@ -74,13 +76,13 @@ export const eventRouter = createTRPCRouter({
       },
       take: 10, // For the top 10 events
     });
-    if (trending.length <= 3 ) {
+    if (trending.length <= 3) {
       // If there is no trending event, return the most recent 10 ending events
       return await db.event.findMany({
         take: 10,
         where: { resolutedAt: { gte: new Date() } }, //
         orderBy: { resolutedAt: "asc" },
-      })
+      });
     }
     const eventIds = trending.map((t) => t.eventId);
     const events = await db.event.findMany({
@@ -92,4 +94,139 @@ export const eventRouter = createTRPCRouter({
     });
     return events;
   }),
+  // getPriceChart: publicProcedure
+  //   .input(z.object({ id: z.string() }))
+  //   .query(async ({ input }) => {
+  //     const result = await db.eventHistory.findMany({
+  //       where: { eventId: input.id },
+  //       orderBy: { createdAt: "asc" },
+  //       select: {
+  //         id: true,
+  //         isAgree: true,
+  //         createdAt: true,
+  //         agreePrice: true,
+  //         totalPrice: true,
+  //         shareAmount: true,
+  //         event: {
+  //           select: {
+  //             nextAgreePrice: true,
+  //           },
+  //         },
+  //       },
+  //     });
+  //     if (!result || result.length === 0) {
+  //       throw new TRPCError({
+  //         code: "NOT_FOUND",
+  //         message: "Event not found",
+  //       });
+  //     }
+  //     let graph_data = result.map((r) => {
+  //       return {
+  //         Time: r.createdAt,
+  //         Yes: r.agreePrice.toNumber(),
+  //         No: 100 - r.agreePrice.toNumber(),
+  //       };
+  //     });
+  //     // if (!result[0]?.event.nextAgreePrice) {
+  //     //   throw new TRPCError({
+  //     //     code: "INTERNAL_SERVER_ERROR",
+  //     //     message: "Latest price not found",
+  //     //   });
+  //     // }
+  //     // graph_data.push({
+  //     //     Time: new Date(),
+  //     //     Yes: result[0]?.event.nextAgreePrice.toNumber(),
+  //     //     No: 100 - result[0]?.event.nextAgreePrice.toNumber(),
+  //     //   })
+  //     const shiftedPrices = graph_data.map((r, index, arr) => {
+  //       // If it's the last element, take the new Yes and No values
+  //       if (index === arr.length - 1) {
+  //         if (!result[0]?.event.nextAgreePrice) {
+  //           throw new TRPCError({
+  //             code: "INTERNAL_SERVER_ERROR",
+  //             message: "Latest price not found",
+  //           });
+  //         }
+  //         return {
+  //           Yes: result[0]?.event.nextAgreePrice?.toNumber(),
+  //           No: 100 - (result[0]?.event.nextAgreePrice?.toNumber()),
+  //         };
+  //       }
+  //       // Otherwise, take the Yes and No values from the next element
+  //       return {
+  //         Yes: arr[index + 1]?.Yes ?? 0,
+  //         No: arr[index + 1]?.No ?? 0,
+  //       };
+  //     });
+  //     graph_data = graph_data.map((item, index) => ({
+  //       ...item,
+  //       Yes: shiftedPrices[index]?.Yes ?? 0,
+  //       No: shiftedPrices[index]?.No ?? 0,
+  //     }));
+  //     // shift the yes no price [n] to match the previous time [n-1]
+  //     return graph_data;
+  //   }),
+    getPriceChartPush: publicProcedure
+    .input(z.object({ id: z.string() }))
+    .query(async ({ input }) => {
+      const result = await db.eventHistory.findMany({
+        where: { eventId: input.id },
+        orderBy: { createdAt: "asc" },
+        select: {
+          id: true,
+          isAgree: true,
+          createdAt: true,
+          agreePrice: true,
+          totalPrice: true,
+          shareAmount: true,
+          event: {
+            select: {
+              nextAgreePrice: true,
+            },
+          },
+        },
+      });
+      if  (!result) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Server Error",
+        });
+      }
+      if (result.length === 0) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "No price history found",
+        });
+      }
+      const graph_data = result.map((r) => {
+        return {
+          Time: r.createdAt,
+          Yes: r.agreePrice.toNumber(),
+          No: 100 - r.agreePrice.toNumber(),
+        };
+      });
+      if (!result[0]?.event.nextAgreePrice) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Latest price not found",
+        });
+      }
+      graph_data.push({
+          Time: new Date(),
+          Yes: result[0]?.event.nextAgreePrice.toNumber(),
+          No: 100 - result[0]?.event.nextAgreePrice.toNumber(),
+        })
+      return graph_data;
+    }),
+    getEventById: publicProcedure
+    .input(z.object({ id: z.string() }))
+    .query(async ({ input }) => {
+      const result = await db.event.findFirst({
+        where: { id: input.id },
+      });
+      return {
+        ...result,
+        nextAgreePrice: result?.nextAgreePrice?.toNumber(),
+      };
+    }),
 });
