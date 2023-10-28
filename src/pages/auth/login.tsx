@@ -70,7 +70,7 @@ export default function Verify() {
         <Header />
         <div className="container flex flex-col items-center justify-center gap-6 px-4 py-16 sm:gap-12  ">
           <h6 className="text-3xl font-extrabold tracking-tight sm:py-4 sm:text-[4rem]">
-            💡🎰 Blubbet
+            💡🎰 Bulbbet
           </h6>
           {
             <div className="grid w-full grid-rows-1 items-center gap-5 font-bold sm:w-96 sm:justify-center">
