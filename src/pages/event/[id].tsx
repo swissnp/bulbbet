@@ -168,7 +168,7 @@ const EventPage = () => {
                 <div className="w-full">
                   <div className="flex w-full flex-col">
                     <h1 className="mb-3 text-2xl font-bold">
-                      {"Resoluttion Details"}
+                      {"Resolution Details"}
                     </h1>
                     {data?.resolutionDetails ?? ""}
                   </div>
