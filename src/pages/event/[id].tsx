@@ -18,6 +18,63 @@ import { appRouter } from "~/server/api/root";
 import { createServerSideHelpers } from "@trpc/react-query/server";
 import superjson from "superjson";
 import Carousel from "~/components/Carousel";
+import { type RouterOutputs } from "~/utils/api";
+import Link from "next/link";
+
+const Modal = ({
+  modalId,
+  data,
+}: {
+  modalId: string;
+  data: RouterOutputs["bet"]["purchase"] | undefined;
+}) => {
+  return (
+    <dialog id={modalId} className="modal">
+      <div className="modal-box">
+        {data ? (
+          <div>
+            <h3 className="text-2xl font-bold">Betting Confirmed 🤙🏻</h3>
+            <p className="py-4"></p>
+            <table className="table">
+              <thead>
+                <tr>
+                  <th className="text-lg font-bold">Bet on</th>
+                  <th className="text-lg font-bold">Price</th>
+                  <th className="text-lg font-bold">Shares</th>
+                  <th className="text-lg font-bold">Total</th>
+                </tr>
+                <tr>
+                  <td
+                    className={`text-lg font-bold ${
+                      data.isAgree ? "text-success" : "text-error"
+                    }`}
+                  >
+                    {data.isAgree ? "Yes ✅" : "No ❌"}
+                  </td>
+                  <td className="text-lg font-normal">
+                    {data.isAgree ? data.agreePrice : 100 - data.agreePrice}
+                  </td>
+                  <td className="text-lg font-normal">{data.shareAmount}</td>
+                  <td className="text-lg font-normal">{data.totalPrice}</td>
+                </tr>
+              </thead>
+            </table>
+            <div className="modal-action">
+              <Link className="btn-primary" href="/history/bettings">
+                View Your Bettings
+              </Link>
+              <Link className="btn" href="">
+                Close
+              </Link>
+            </div>
+          </div>
+        ) : (
+          <div>Something went wrong</div>
+        )}
+      </div>
+    </dialog>
+  );
+};
 
 const EventPage = () => {
   const router = useRouter();
@@ -30,13 +87,25 @@ const EventPage = () => {
       enabled: !!router.query.id,
     },
   );
-  const { mutate } = api.bet.purchase.useMutation();
+  const {
+    data: purchaseResult,
+    mutate,
+    isLoading,
+  } = api.bet.purchase.useMutation({
+    onError: async (error) => {
+      if (error.message === "Not enough money") {
+        await router.push("/balance/withdraw-unsuccess-zero");
+      }
+      setError("root", { message: error.message, type: "manual" });
+    },
+  });
   const {
     register,
     handleSubmit,
     control,
     watch,
-    formState: { errors, isValid, isSubmitting },
+    setError,
+    formState: { errors, isValid },
   } = useForm<IPurchaseSchema>({
     resolver: zodResolver(PurchaseSchema),
     defaultValues: {
@@ -55,8 +124,13 @@ const EventPage = () => {
       </Head>
       <main className=" flex min-h-screen w-screen flex-col">
         <Header />
-        <div className="relative mt-24 flex flex-col justify-center px-4">
-          <div className="mb-5 flex flex-col overflow-hidden rounded-xl bg-neutral-focus shadow-2xl">
+        <Modal modalId="purchase-modal" data={purchaseResult} />
+        <div className={`relative mt-24 flex flex-col justify-center px-4`}>
+          <div
+            className={`mb-5 flex flex-col overflow-hidden rounded-xl bg-neutral-focus shadow-2xl ${
+              data?.isEnded && "grayscale"
+            }`}
+          >
             <div className="hero bg-neutral">
               <div className="hero-content flex w-full flex-col overflow-hidden p-0 md:flex-row md:px-5 md:py-10">
                 <div className="h-[30rem] w-full overflow-hidden md:w-[30rem] md:justify-items-center md:rounded-3xl md:align-middle md:drop-shadow-xl">
@@ -79,7 +153,9 @@ const EventPage = () => {
                     render={({ field: { onChange, onBlur, value, ref } }) => (
                       <div className="join text-ellipsis">
                         <input
-                          className="btn join-item btn-sm text-ellipsis checked:!btn-success"
+                          className={`btn join-item btn-sm text-ellipsis checked:!btn-success ${
+                            data?.isEnded && "btn-disabled"
+                          }`}
                           type="radio"
                           onBlur={onBlur} // notify when input is touched
                           onChange={() => onChange(true)} // send value to hook form
@@ -90,7 +166,9 @@ const EventPage = () => {
                           }
                         />
                         <input
-                          className="btn join-item btn-sm text-ellipsis checked:!btn-error"
+                          className={`btn join-item btn-sm text-ellipsis checked:!btn-error ${
+                            data?.isEnded && "btn-disabled"
+                          }`}
                           type="radio"
                           onBlur={onBlur} // notify when input is touched
                           onChange={() => onChange(false)} // send value to hook form
@@ -140,14 +218,22 @@ const EventPage = () => {
                   <div className="pt-4">
                     <button
                       className={`btn btn-primary relative ${
-                        isSubmitting && "loading loading-spinner"
-                      }
+                        isLoading && "loading loading-spinner"
+                      } ${data?.isEnded && "btn-disabled"}
                     `}
-                      onClick={handleSubmit((value) => {
-                        mutate(value);
+                      onClick={handleSubmit((data) => {
+                        mutate(data);
+                        if (purchaseResult) {
+                          if (document)
+                            (
+                              document.getElementById(
+                                "purchase-modal",
+                              ) as HTMLDialogElement
+                            ).showModal();
+                        }
                       })}
                     >
-                      {"PURCHASE"}
+                      {data?.isEnded ? "ENDED" : "PURCHASE"}
                     </button>
                     {isValid && (
                       <div className="inline pl-4">

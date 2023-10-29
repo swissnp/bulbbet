@@ -15,10 +15,7 @@ const BettingHistory = () => {
         <div className="grid grid-cols-1 gap-4 gap-x-5 px-4 pb-10 md:grid-cols-2 lg:grid-cols-3">
           {events?.map((history) => {
             return (
-              <div
-                className="card w-full bg-base-200 shadow-xl"
-                key={history.id}
-              >
+              <div className="card w-72 bg-base-200 shadow-xl" key={history.id}>
                 <div>
                   <div className="flex h-72 w-72 flex-grow-0 overflow-hidden rounded-t-xl">
                     <Image
@@ -30,28 +27,32 @@ const BettingHistory = () => {
                     />
                   </div>
                 </div>
-                <progress
-                  className={`flex-inline progress ${
-                    true ? "progress-success" : "bg-error"
-                  } flex w-full`}
-                  value={history.agreePrice.toString()}
-                  max="100"
-                ></progress>
-                <div className="flex w-full flex-row justify-between px-1">
-                  <p className="text-center text-lg">
-                    {history.agreePrice.toString()}
-                  </p>
-                  <p className="text-center text-lg">
-                    {100 - parseFloat(history.agreePrice.toString())}
-                  </p>
-                </div>
-                <div className="card-body">
-                  <h2 className="card-title">{history.event.name}</h2>
-                  <p>{history.event.resolutionDetails}</p>
+                <div className="card-body justify-between">
+                  <div>
+                    <h2 className="card-title line-clamp-2">
+                      {history.event.name}
+                    </h2>
+                    <p className="line-clamp-2">
+                      {history.event.resolutionDetails}
+                    </p>
+                    <p
+                      className={
+                        history.isAgree ? "text-success" : "text-error"
+                      }
+                    >
+                      {history.isAgree
+                        ? `Betted: Yes ${history.totalPrice}💡 @${history.agreePrice}`
+                        : `Betted: No ${history.totalPrice}💡 @${
+                            100 - history.agreePrice
+                          }`}
+                    </p>
+                  </div>
                   <div className="card-actions justify-end">
                     {history.event.resolutedAt &&
                     history.event.resolutedAt < new Date() ? (
-                      <button className={`btn btn-primary`}>Resolute</button>
+                      <button className={`btn btn-disabled btn-sm mt-5`}>
+                        Waiting for Resolution
+                      </button>
                     ) : (
                       <div className="flex flex-col gap-2">
                         <div className="flex w-full items-center justify-center">

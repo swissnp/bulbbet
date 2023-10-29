@@ -15,14 +15,14 @@ const Carousel = ({
   return (
     <div className="w-full items-center justify-center px-5 md:px-10">
       <div
-        className={`relative flex w-full flex-col items-center justify-center gap-6 transition md:flex-row md:items-start md:justify-start`}
+        className={`grid-col-1 relative grid w-full grid-flow-row items-center justify-center gap-6 transition md:grid-flow-col md:grid-rows-1 md:items-start md:justify-start`}
       >
         {trendingData.map(({ imageUrl, id, name, nextAgreePrice }) => {
           return (
             <Link
               href={`/event/${id}`}
               key={id}
-              className="card relative flex w-72 flex-none overflow-hidden rounded-xl shadow-md transition hover:scale-[1.01] hover:shadow-2xl"
+              className="card card-compact relative flex h-full w-72 flex-none overflow-hidden rounded-xl shadow-md transition hover:scale-[1.01] hover:shadow-2xl"
             >
               <div className="relative h-72 w-72 overflow-hidden">
                 <Image
@@ -39,13 +39,19 @@ const Carousel = ({
                   max="100"
                 ></progress>
               </div>
-              <div className="card-body z-10 bg-base-200">
-                <div className="card-title text-lg font-semibold">{name}</div>
-                <div className="flex w-full gap-2 text-base font-semibold">
-                  <span className="text-success">
-                    Yes {nextAgreePrice.toString()}{" "}
-                  </span>
-                  <span className="text-error">No {100 - nextAgreePrice}</span>
+              <div className="card-body z-10 justify-between bg-base-200">
+                <div>
+                  <div className="card-title line-clamp-2 text-lg font-semibold">
+                    {name}
+                  </div>
+                  <div className="flex w-full gap-2 text-base font-semibold">
+                    <span className="text-success">
+                      Yes {nextAgreePrice.toString()}{" "}
+                    </span>
+                    <span className="text-error">
+                      No {100 - nextAgreePrice}
+                    </span>
+                  </div>
                 </div>
                 <div className="card-actions justify-end pt-2">
                   <div className="btn btn-primary">Purchase</div>

@@ -93,8 +93,12 @@ export default function Interest() {
                           </p>
                         </div>
                         <div className="card-body">
-                          <h2 className="card-title">{result.name}</h2>
-                          <p>{result.resolutionDetails}</p>
+                          <h2 className="card-title line-clamp-2">
+                            {result.name}
+                          </h2>
+                          <p className="line-clamp-2">
+                            {result.resolutionDetails}
+                          </p>
                           <div className="card-actions justify-end">
                             <Link
                               className={`btn btn-primary`}
