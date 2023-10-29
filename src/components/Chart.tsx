@@ -20,15 +20,15 @@ export const Test = ({ id }: { id: string }) => {
     },
   );
   return (
-    <>
+    <div className="relative h-full w-full">
       <ResponsiveContainer width="100%" height="100%">
         <LineChart
           data={data}
           margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
         >
           <CartesianGrid strokeDasharray="3 3" stroke="#FFFFFF" />
-          <XAxis dataKey="Time" stroke="#FFFFFF" scale="time" tick={false} />
-          <YAxis stroke="#FFFFFF" />
+          <XAxis dataKey="Time" stroke="#FFFFFF" tick={false} />
+          <YAxis stroke="#FFFFFF" domain={[0, 100]} />
           <Tooltip
             contentStyle={{
               backgroundColor: "#181920",
@@ -44,15 +44,15 @@ export const Test = ({ id }: { id: string }) => {
             }}
           />
           <Legend />
-          <Line type="stepBefore" dataKey="Yes" stroke="#FF5757" />
-          <Line type="stepBefore" dataKey="No" stroke="#52FA7C" />
+          <Line type="stepBefore" dataKey="Yes" stroke="#52FA7C" />
+          <Line type="stepBefore" dataKey="No" stroke="#FF5757" />
         </LineChart>
       </ResponsiveContainer>
       {error && (
-        <div className="absolute flex w-full justify-center pr-10 pt-5 text-center text-neutral-content">
-          <p className="flex">{error.message}</p>
+        <div className="absolute top-0 flex h-full w-full flex-col items-center justify-center pb-14 pl-12 text-center sm:pl-0">
+          {error.message}
         </div>
       )}
-    </>
+    </div>
   );
 };
