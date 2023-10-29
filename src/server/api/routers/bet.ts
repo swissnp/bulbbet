@@ -39,6 +39,11 @@ export const betRouter = createTRPCRouter({
         ...e.event,
         nextAgreePrice: +e.event.nextAgreePrice.toNumber().toFixed(2),
       },
+  
+      ResolutionPayout: {
+        ...e.ResolutionPayout,
+        payoutAmount: e.ResolutionPayout?.payoutAmount.toNumber().toFixed(2),
+      }
     }));
   }),
 

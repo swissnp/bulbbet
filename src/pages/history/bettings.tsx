@@ -52,15 +52,27 @@ const BettingHistory = () => {
                           ).toFixed(2)}`}
                     </p>
                   </div>
-                  <div className="card-actions justify-end">
+                  <div className="card-actions justify-end pt-2">
                     {history.event.resolutedAt &&
                     history.event.resolutedAt < new Date() ? (
                       <div>
-                        {
+                        {history.event.isResoluted ? (
+                          <>
+                            {history.ResolutionPayout?.payoutAmount ? (
+                              <div className="badge badge-success badge-lg">
+                                Payout {history.ResolutionPayout?.payoutAmount}
+                              </div>
+                            ) : (
+                              <div className="badge badge-neutral badge-outline badge-lg">
+                                Lose
+                              </div>
+                            )}
+                          </>
+                        ) : (
                           <button className={`btn btn-disabled btn-sm mt-5`}>
                             Waiting for Resolution
                           </button>
-                        }
+                        )}
                       </div>
                     ) : (
                       <div className="flex flex-col gap-2">

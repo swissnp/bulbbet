@@ -94,6 +94,8 @@ model Event {
 
     @@index([name])
     @@index([isResoluted])
+    @@index([resolutedAt])
+
 }
 
 model EventHistory {
@@ -109,6 +111,8 @@ model EventHistory {
     boughtBy   User   @relation(fields: [boughtById], references: [id])
     Resolution Resolution?
     ResolutionPayout ResolutionPayout?
+
+    @@index([eventId])
 }
 
 model Resolution {
@@ -120,6 +124,8 @@ model Resolution {
     lastHistoryId String @unique
     lastHistory EventHistory @relation(fields: [lastHistoryId], references: [id])
     resolutionPayouts ResolutionPayout[]
+
+    @@index([eventId])
 }
 
 model ResolutionPayout {
@@ -133,4 +139,6 @@ model ResolutionPayout {
     paidAt DateTime?
     BetHistoryId String @unique
     BetHistory EventHistory @relation(fields: [BetHistoryId], references: [id])
+
+    @@index([resolutionId])
 }
