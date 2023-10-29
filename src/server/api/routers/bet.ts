@@ -60,7 +60,8 @@ export const betRouter = createTRPCRouter({
         message: "Event has already ended",
       })
     }
-    const pricePerShare = isAgree ? event?.nextAgreePrice.toNumber() : 100 - event?.nextAgreePrice.toNumber();
+    const agreePrice = event?.nextAgreePrice.toNumber();
+    const pricePerShare = isAgree ? (agreePrice) : (100 - agreePrice);
     const totalPrice = pricePerShare * shareAmount;
     // check if user has enough money
     if (totalPrice > ctx.session.user.amount) {
@@ -83,7 +84,7 @@ export const betRouter = createTRPCRouter({
         isAgree,
         shareAmount,
         totalPrice,
-        agreePrice: pricePerShare,
+        agreePrice,
         event: {
           connect: {
             id: eventId,
