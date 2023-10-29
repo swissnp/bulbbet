@@ -23,6 +23,21 @@ export const eventRouter = createTRPCRouter({
           resolutionDetails: input.resolutionDetails,
           imageUrl: env.S3_PUBLIC_URL + "/" + input.fileName,
           description: input.description,
+          eventHistories: {
+            create: [{
+              isAgree: true,
+              agreePrice: 50,
+              totalPrice: 500,
+              shareAmount: 10,
+              boughtById: 'cloab86li0000tfe7ydv7e63z', // initial buying will be done by the ADMIN ACCOUNT
+            },{
+              isAgree: false,
+              agreePrice: 50,
+              totalPrice: 500,
+              shareAmount: 10,
+              boughtById: 'cloab86li0000tfe7ydv7e63z', // initial buying will be done by the ADMIN ACCOUNT
+            }],
+          }
         },
       });
       return result;
@@ -46,7 +61,10 @@ export const eventRouter = createTRPCRouter({
       where: { createdBy: { id: ctx.session.user.id } },
       orderBy: { resolutedAt: "asc" },
     });
-    return result;
+    return result.map((e) => ({
+      ...e,
+      nextAgreePrice: +e.nextAgreePrice.toNumber().toFixed(2),
+    }));
   }),
   getEventData: publicProcedure
     .input(z.object({ id: z.string() }))
@@ -54,7 +72,16 @@ export const eventRouter = createTRPCRouter({
       const result = await db.event.findFirst({
         where: { id: input.id },
       });
-      return result;
+      if (!result) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Event not found",
+        });
+      }
+      return {
+        ...result,
+        nextAgreePrice: +result?.nextAgreePrice?.toNumber().toFixed(2),
+      }
     }),
   getAllEventsId: publicProcedure.query(async () => {
     const result = await db.event.findMany({
@@ -78,11 +105,15 @@ export const eventRouter = createTRPCRouter({
     });
     if (trending.length <= 3) {
       // If there is no trending event, return the most recent 10 ending events
-      return await db.event.findMany({
+      const recentEvents = await db.event.findMany({
         take: 10,
         where: { resolutedAt: { gte: new Date() } }, //
         orderBy: { resolutedAt: "asc" },
       });
+      return recentEvents.map((e) => ({
+        ...e,
+        nextAgreePrice: +e.nextAgreePrice.toNumber().toFixed(2),
+      }))
     }
     const eventIds = trending.map((t) => t.eventId);
     const events = await db.event.findMany({
@@ -92,7 +123,10 @@ export const eventRouter = createTRPCRouter({
         },
       },
     });
-    return events;
+    return events.map((e) => ({
+      ...e,
+      nextAgreePrice: +e.nextAgreePrice.toNumber().toFixed(2),
+    }));
   }),
   // getPriceChart: publicProcedure
   //   .input(z.object({ id: z.string() }))
@@ -201,8 +235,8 @@ export const eventRouter = createTRPCRouter({
       const graph_data = result.map((r) => {
         return {
           Time: r.createdAt,
-          Yes: r.agreePrice.toNumber(),
-          No: 100 - r.agreePrice.toNumber(),
+          Yes: +r.agreePrice.toNumber().toFixed(2),
+          No: +(100 - r.agreePrice.toNumber()).toFixed(2),
         };
       });
       if (!result[0]?.event.nextAgreePrice) {
@@ -213,9 +247,12 @@ export const eventRouter = createTRPCRouter({
       }
       graph_data.push({
           Time: new Date(),
-          Yes: result[0]?.event.nextAgreePrice.toNumber(),
-          No: 100 - result[0]?.event.nextAgreePrice.toNumber(),
+          Yes: +result[0]?.event.nextAgreePrice.toNumber().toFixed(2),
+          No: 100 - +result[0]?.event.nextAgreePrice.toNumber().toFixed(2),
         })
+      if (graph_data[0]?.Yes == 50 && graph_data[1]?.Yes == 50) {
+        graph_data.shift();
+      }
       return graph_data;
     }),
     getEventById: publicProcedure
@@ -224,9 +261,45 @@ export const eventRouter = createTRPCRouter({
       const result = await db.event.findFirst({
         where: { id: input.id },
       });
+      if (!result) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Event not found",
+        });
+      }
       return {
         ...result,
-        nextAgreePrice: result?.nextAgreePrice?.toNumber(),
+        nextAgreePrice: +result?.nextAgreePrice?.toNumber().toFixed(2),
       };
+    }),
+    getEventBySearch: publicProcedure
+    .input(z.object({ search: z.string() }))
+    .mutation(async ({ input }) => {
+      let where = {};
+      if (input.search != '') {
+        where = {
+          OR: [
+            {
+              name: {
+                contains: input.search,
+                mode: "insensitive",
+              },
+            },
+            {
+              description: {
+                contains: input.search,
+                mode: "insensitive",
+              },
+            },
+          ],
+        };
+      }
+      const result = await db.event.findMany({
+        where,
+      });
+      return result.map((e) => ({
+        ...e,
+        nextAgreePrice: +e.nextAgreePrice.toNumber().toFixed(2),
+      }));
     }),
 });

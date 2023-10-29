@@ -7,7 +7,6 @@ import { api } from "~/utils/api";
 import Carousel from "~/components/Carousel";
 import Tutorial from "~/components/Tutorial";
 import Footer from "~/components/Footer";
-
 export default function Home() {
   return (
     <>
@@ -18,7 +17,7 @@ export default function Home() {
       </Head>
       <main className=" flex min-h-screen flex-col items-center justify-center">
         <Header />
-        <div className="pt-20">
+        <div className="pt-16">
           <Hero />
         </div>
         <div className="w-full">
@@ -39,14 +38,14 @@ const TrendingEvent = () => {
   const { data } = api.event.getTrending.useQuery(undefined);
   return (
     <>
-      <div className="flex w-full justify-between px-12 text-4xl font-bold">
+      <div className="flex w-full justify-between px-5 text-4xl font-bold md:px-12">
         <div>📈 Trending events</div>
         <Link href="/listings">
           <div className="btn btn-primary">View all</div>
         </Link>
       </div>
       <div className="w-full pt-5">
-        <div className="hide-scroll mx-10 overflow-scroll rounded-lg bg-neutral py-10">
+        <div className="hide-scroll mx-5 flex-col overflow-scroll rounded-lg bg-neutral py-10 md:mx-10">
           {data && <Carousel trendingData={data} />}
         </div>
       </div>

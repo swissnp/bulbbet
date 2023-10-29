@@ -13,16 +13,18 @@ const Carousel = ({
   //translate-x = (100%+24px)*idx (sm screen)
 
   return (
-    <div className="w-full items-center px-10">
-      <div className={`relative flex w-full gap-6 transition`}>
+    <div className="w-full items-center justify-center px-5 md:px-10">
+      <div
+        className={`relative flex w-full flex-col items-center justify-center gap-6 transition md:flex-row md:items-start md:justify-start`}
+      >
         {trendingData.map(({ imageUrl, id, name, nextAgreePrice }) => {
           return (
             <Link
               href={`/event/${id}`}
               key={id}
-              className="card card-compact relative flex flex-none overflow-hidden rounded-lg transition hover:scale-105 hover:shadow-2xl"
+              className="card relative flex w-72 flex-none overflow-hidden rounded-xl shadow-md transition hover:scale-[1.01] hover:shadow-2xl"
             >
-              <div className="h-72 w-72 overflow-hidden">
+              <div className="relative h-72 w-72 overflow-hidden">
                 <Image
                   src={imageUrl}
                   fill
@@ -30,20 +32,23 @@ const Carousel = ({
                   className="object-cover object-center"
                 />
               </div>
-              <div className="card-body z-10 bg-base-200">
-                <div className="card-title text-lg font-semibold">{name}</div>
+              <div className="bg-base-200">
                 <progress
                   className="flex-inline progress progress-success flex w-full bg-error"
                   value={nextAgreePrice.toString()}
                   max="100"
                 ></progress>
-                <div className="flex w-full justify-between px-1 text-base font-semibold">
+              </div>
+              <div className="card-body z-10 bg-base-200">
+                <div className="card-title text-lg font-semibold">{name}</div>
+                <div className="flex w-full gap-2 text-base font-semibold">
                   <span className="text-success">
-                    Yes {nextAgreePrice.toString()}💡{" "}
+                    Yes {nextAgreePrice.toString()}{" "}
                   </span>
-                  <span className="text-error">
-                    No {100 - parseFloat(nextAgreePrice.toString())}💡
-                  </span>
+                  <span className="text-error">No {100 - nextAgreePrice}</span>
+                </div>
+                <div className="card-actions justify-end pt-2">
+                  <div className="btn btn-primary">Purchase</div>
                 </div>
               </div>
             </Link>

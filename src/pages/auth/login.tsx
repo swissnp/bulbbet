@@ -121,7 +121,6 @@ export default function Verify() {
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const session = await getServerAuthSession(context);
-  console.log(session);
   if (session?.user) {
     return {
       redirect: {

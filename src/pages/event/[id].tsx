@@ -30,10 +30,10 @@ const EventPage = () => {
       enabled: !!router.query.id,
     },
   );
+  const { mutate } = api.bet.purchase.useMutation();
   const {
     register,
     handleSubmit,
-    getValues,
     control,
     watch,
     formState: { errors, isValid, isSubmitting },
@@ -137,26 +137,29 @@ const EventPage = () => {
                       </p>
                     )}
                   </div>
-                  <div className="pt-3">
+                  <div className="pt-4">
                     <button
                       className={`btn btn-primary relative ${
                         isSubmitting && "loading loading-spinner"
                       }
                     `}
-                      onClick={() => {
-                        console.log(getValues());
-                        console.log(errors);
-                      }}
+                      onClick={handleSubmit((value) => {
+                        mutate(value);
+                      })}
                     >
                       {"PURCHASE"}
                     </button>
                     {isValid && (
                       <div className="inline pl-4">
                         Total:{" "}
-                        {(watch("isAgree")
-                          ? data?.nextAgreePrice ?? 0
-                          : 100 - (data?.nextAgreePrice ?? 0)) *
-                          watch("shareAmount")}
+                        {
+                          +(
+                            (watch("isAgree")
+                              ? data?.nextAgreePrice ?? 0
+                              : 100 - (data?.nextAgreePrice ?? 0)) *
+                            watch("shareAmount")
+                          ).toFixed(2)
+                        }
                       </div>
                     )}
                   </div>

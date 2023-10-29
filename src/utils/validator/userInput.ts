@@ -21,8 +21,14 @@ export type IVerificationEmail = z.infer<typeof VerificationEmailSchema>;
 
 export const PurchaseSchema = z.object({
   eventId: z.string({required_error: "Please select an event"}),
-  isAgree: z.boolean({required_error: "Please select agree or disagree"}),
+  isAgree: z.boolean({required_error: "Please select yes or no"}),
   shareAmount: z.number().min(1, {message: "You must buy at least 1 share"}),
 })
 
 export type IPurchaseSchema = z.infer<typeof PurchaseSchema>;
+
+export const SearchSchema = z.object({
+  search: z.string(),
+})
+
+export type ISearchSchema = z.infer<typeof SearchSchema>;
