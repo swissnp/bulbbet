@@ -5,10 +5,10 @@ const Header = () => {
   const { data: session } = useSession();
   return (
     <div className="fixed top-4 z-50 w-full px-4">
-      <div className="navbar bg-base-200 w-full rounded-2xl drop-shadow-lg">
+      <div className="navbar w-full rounded-2xl bg-base-200 drop-shadow-lg">
         <div className="navbar-start">
           <div className="dropdown">
-            <label tabIndex={0} className="btn-ghost btn lg:hidden">
+            <label tabIndex={0} className="btn btn-ghost lg:hidden">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-5 w-5"
@@ -26,7 +26,7 @@ const Header = () => {
             </label>
             <ul
               tabIndex={0}
-              className="dropdown-content menu rounded-box menu-compact bg-base-200 mt-3 w-52 p-2 shadow"
+              className="menu-compact menu dropdown-content rounded-box mt-3 w-52 bg-base-200 p-2 shadow"
             >
               <li>
                 <Link href="/collection">Listings</Link>
@@ -41,7 +41,7 @@ const Header = () => {
               </li> */}
             </ul>
           </div>
-          <Link className="btn-ghost btn text-xl normal-case" href="/">
+          <Link className="btn btn-ghost text-xl normal-case" href="/">
             {"💡🎰 Bulbbet"}
           </Link>
         </div>
@@ -89,9 +89,9 @@ const Header = () => {
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
                 className="lucide lucide-pen-square h-5 w-5"
               >
                 <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
@@ -101,7 +101,7 @@ const Header = () => {
             <div className="dropdown dropdown-end">
               <label
                 tabIndex={0}
-                className="dropdown btn-ghost btn-circle btn flex px-3"
+                className="btn btn-circle dropdown btn-ghost flex px-3"
               >
                 {/*  account button begin */}
                 <div className="indicator">
@@ -123,19 +123,19 @@ const Header = () => {
               </label>{" "}
               <ul
                 tabIndex={0}
-                className="dropdown-content menu rounded-box menu-compact bg-base-200 relative mt-3 w-52 p-2 shadow"
+                className="menu-compact menu dropdown-content rounded-box relative mt-3 w-52 bg-base-200 p-2 shadow"
               >
                 {!session ? (
                   <div>
                     <li>
                       <Link href="/auth/login">Login</Link>
                     </li>
-                    <li>
-                      <Link href="/auth/register">Register</Link>
-                    </li>
                   </div>
                 ) : (
                   <div>
+                    <li>
+                      <div>{+session.user.amount.toFixed(2)}💡</div>
+                    </li>
                     <li>
                       <Link href="/history/bettings">Betting History</Link>
                     </li>

@@ -101,6 +101,7 @@ export const eventRouter = createTRPCRouter({
           eventId: "desc",
         },
       },
+      where: { event: { resolutedAt: { gte: new Date() } }},
       take: 10, // For the top 10 events
     });
     if (trending.length <= 3) {
@@ -120,7 +121,7 @@ export const eventRouter = createTRPCRouter({
       where: {
         id: {
           in: eventIds,
-        },
+        }
       },
     });
     return events.map((e) => ({
@@ -270,6 +271,7 @@ export const eventRouter = createTRPCRouter({
       return {
         ...result,
         nextAgreePrice: +result?.nextAgreePrice?.toNumber().toFixed(2),
+        isEnded: result.resolutedAt < new Date(),
       };
     }),
     getEventBySearch: publicProcedure
@@ -300,6 +302,7 @@ export const eventRouter = createTRPCRouter({
       return result.map((e) => ({
         ...e,
         nextAgreePrice: +e.nextAgreePrice.toNumber().toFixed(2),
+        isEnded: e.resolutedAt < new Date(),
       }));
     }),
 });

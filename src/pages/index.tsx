@@ -20,7 +20,7 @@ export default function Home() {
         <div className="pt-16">
           <Hero />
         </div>
-        <div className="w-full">
+        <div className="w-full ">
           <TrendingEvent />
         </div>
         <div className="w-full items-center justify-center pt-10">
@@ -39,13 +39,13 @@ const TrendingEvent = () => {
   return (
     <>
       <div className="flex w-full justify-between px-5 text-4xl font-bold md:px-12">
-        <div>📈 Trending events</div>
+        <div className="">📈 Trending events</div>
         <Link href="/listings">
           <div className="btn btn-primary">View all</div>
         </Link>
       </div>
       <div className="w-full pt-5">
-        <div className="hide-scroll mx-5 flex-col overflow-scroll rounded-lg bg-neutral py-10 md:mx-10">
+        <div className="hide-scroll mx-5 overflow-scroll rounded-lg bg-neutral py-10 md:mx-10">
           {data && <Carousel trendingData={data} />}
         </div>
       </div>

@@ -78,7 +78,7 @@ export const betRouter = createTRPCRouter({
         }
       }
     })
-    await db.eventHistory.create({
+    const orderSummary = await db.eventHistory.create({
       data: {
         isAgree,
         shareAmount,
@@ -117,7 +117,7 @@ export const betRouter = createTRPCRouter({
       })
     }
     // update event
-    const newEvent = await db.event.update({
+    await db.event.update({
       where: { id: eventId },
       data: {
         nextAgreePrice: {
@@ -125,6 +125,10 @@ export const betRouter = createTRPCRouter({
         }
       }
     })
-    return newEvent;
+    return {
+      ...orderSummary,
+      agreePrice: +orderSummary.agreePrice.toNumber().toFixed(2),
+      totalPrice: +orderSummary.totalPrice.toNumber().toFixed(2),
+    };
   })
 });
