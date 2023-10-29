@@ -67,11 +67,7 @@ export default function resoluteEvent() {
                 {event.nextAgreePrice.toString()}
               </p>
               <p className="text-center text-lg">
-                {
-                  +(100 - parseFloat(event.nextAgreePrice.toString())).toFixed(
-                    2,
-                  )
-                }
+                {+(100 - event.nextAgreePrice).toFixed(2)}
               </p>
             </div>
             <div className="text-2xl font-semibold">Resolution :</div>

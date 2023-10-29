@@ -249,7 +249,7 @@ export const eventRouter = createTRPCRouter({
       graph_data.push({
           Time: new Date(),
           Yes: +result[0]?.event.nextAgreePrice.toNumber().toFixed(2),
-          No: 100 - +result[0]?.event.nextAgreePrice.toNumber().toFixed(2),
+          No: +(100 - result[0]?.event.nextAgreePrice.toNumber()).toFixed(2),
         })
       if (graph_data[0]?.Yes == 50 && graph_data[1]?.Yes == 50) {
         graph_data.shift();
