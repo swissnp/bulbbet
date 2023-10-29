@@ -1,5 +1,8 @@
 import { z } from "zod";
-import { eventCreateSchema } from "~/utils/validator/userInput";
+import {
+  eventCreateSchema,
+  ResolutionSchema,
+} from "~/utils/validator/userInput";
 import {
   createTRPCRouter,
   protectedProcedure,
@@ -24,20 +27,23 @@ export const eventRouter = createTRPCRouter({
           imageUrl: env.S3_PUBLIC_URL + "/" + input.fileName,
           description: input.description,
           eventHistories: {
-            create: [{
-              isAgree: true,
-              agreePrice: 50,
-              totalPrice: 500,
-              shareAmount: 10,
-              boughtById: 'cloab86li0000tfe7ydv7e63z', // initial buying will be done by the ADMIN ACCOUNT
-            },{
-              isAgree: false,
-              agreePrice: 50,
-              totalPrice: 500,
-              shareAmount: 10,
-              boughtById: 'cloab86li0000tfe7ydv7e63z', // initial buying will be done by the ADMIN ACCOUNT
-            }],
-          }
+            create: [
+              {
+                isAgree: true,
+                agreePrice: 50,
+                totalPrice: 500,
+                shareAmount: 10,
+                boughtById: "cloab86li0000tfe7ydv7e63z", // initial buying will be done by the ADMIN ACCOUNT
+              },
+              {
+                isAgree: false,
+                agreePrice: 50,
+                totalPrice: 500,
+                shareAmount: 10,
+                boughtById: "cloab86li0000tfe7ydv7e63z", // initial buying will be done by the ADMIN ACCOUNT
+              },
+            ],
+          },
         },
       });
       return result;
@@ -81,7 +87,7 @@ export const eventRouter = createTRPCRouter({
       return {
         ...result,
         nextAgreePrice: +result?.nextAgreePrice?.toNumber().toFixed(2),
-      }
+      };
     }),
   getAllEventsId: publicProcedure.query(async () => {
     const result = await db.event.findMany({
@@ -101,7 +107,7 @@ export const eventRouter = createTRPCRouter({
           eventId: "desc",
         },
       },
-      where: { event: { resolutedAt: { gte: new Date() } }},
+      where: { event: { resolutedAt: { gte: new Date() } } },
       take: 10, // For the top 10 events
     });
     if (trending.length <= 3) {
@@ -114,14 +120,14 @@ export const eventRouter = createTRPCRouter({
       return recentEvents.map((e) => ({
         ...e,
         nextAgreePrice: +e.nextAgreePrice.toNumber().toFixed(2),
-      }))
+      }));
     }
     const eventIds = trending.map((t) => t.eventId);
     const events = await db.event.findMany({
       where: {
         id: {
           in: eventIds,
-        }
+        },
       },
     });
     return events.map((e) => ({
@@ -201,7 +207,7 @@ export const eventRouter = createTRPCRouter({
   //     // shift the yes no price [n] to match the previous time [n-1]
   //     return graph_data;
   //   }),
-    getPriceChartPush: publicProcedure
+  getPriceChartPush: publicProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ input }) => {
       const result = await db.eventHistory.findMany({
@@ -221,7 +227,7 @@ export const eventRouter = createTRPCRouter({
           },
         },
       });
-      if  (!result) {
+      if (!result) {
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
           message: "Server Error",
@@ -247,16 +253,16 @@ export const eventRouter = createTRPCRouter({
         });
       }
       graph_data.push({
-          Time: new Date(),
-          Yes: +result[0]?.event.nextAgreePrice.toNumber().toFixed(2),
-          No: +(100 - result[0]?.event.nextAgreePrice.toNumber()).toFixed(2),
-        })
+        Time: new Date(),
+        Yes: +result[0]?.event.nextAgreePrice.toNumber().toFixed(2),
+        No: +(100 - result[0]?.event.nextAgreePrice.toNumber()).toFixed(2),
+      });
       if (graph_data[0]?.Yes == 50 && graph_data[1]?.Yes == 50) {
         graph_data.shift();
       }
       return graph_data;
     }),
-    getEventById: publicProcedure
+  getEventById: publicProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ input }) => {
       const result = await db.event.findFirst({
@@ -274,11 +280,11 @@ export const eventRouter = createTRPCRouter({
         isEnded: result.resolutedAt < new Date(),
       };
     }),
-    getEventBySearch: publicProcedure
+  getEventBySearch: publicProcedure
     .input(z.object({ search: z.string() }))
     .mutation(async ({ input }) => {
       let where = {};
-      if (input.search != '') {
+      if (input.search != "") {
         where = {
           OR: [
             {
@@ -296,13 +302,158 @@ export const eventRouter = createTRPCRouter({
           ],
         };
       }
-      const result = await db.event.findMany({
-        where,
+      const currentDate = new Date();
+      const notEndResult = await db.event.findMany({
+        where: {
+          ...where,
+          resolutedAt: {
+            gt: currentDate,
+          },
+        },
+        orderBy: [
+          {
+            resolutedAt: "asc",
+          },
+        ],
+        take: 60,
       });
-      return result.map((e) => ({
+      const remaining = 60 - notEndResult.length;
+      const endResult = await db.event.findMany({
+        where: {
+          ...where,
+          resolutedAt: {
+            lte: currentDate,
+          },
+        },
+        orderBy: [
+          {
+            resolutedAt: "desc",
+          },
+        ],
+        take: remaining < 0 ? 0 : remaining,
+      });
+      return [...notEndResult, ...endResult].map((e) => ({
         ...e,
         nextAgreePrice: +e.nextAgreePrice.toNumber().toFixed(2),
-        isEnded: e.resolutedAt < new Date(),
+        isEnded: e.resolutedAt < currentDate,
       }));
+    }),
+  resoluteEvent: protectedProcedure
+    .input(ResolutionSchema)
+    .mutation(async ({ input }) => {
+      const event = await db.event.findFirst({
+        where: {
+          id: input.id,
+        },
+        select: {
+          resolutedAt: true,
+          eventHistories: true,
+        },
+      });
+
+      if (!event) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Event not found",
+        });
+      }
+
+      if (event.resolutedAt > new Date()) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "Event has not ended yet",
+        });
+      }
+
+      // get the latest event history by qurying the eventHistories table
+      const latestEventHistory = await db.eventHistory.findFirst({
+        where: { eventId: input.id },
+        orderBy: { createdAt: "desc" },
+      });
+
+      if (!latestEventHistory) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Server Error",
+        });
+      }
+
+      // total Money of the opposite side of that event
+      const totalMoneyOpp = event.eventHistories.reduce((acc, cur) => {
+        if (
+          cur.isAgree != input.isAgree &&
+          cur.boughtById != "cloab86li0000tfe7ydv7e63z"
+        ) {
+          return acc + cur.totalPrice.toNumber();
+        }
+        return acc;
+      }, 0);
+
+      // total Amount of the same side of that event
+      const totalShareSame = event.eventHistories.reduce((acc, cur) => {
+        if (
+          cur.isAgree == input.isAgree &&
+          cur.boughtById != "cloab86li0000tfe7ydv7e63z"
+        ) {
+          return acc + cur.shareAmount;
+        }
+        return acc;
+      }, 0);
+      console.log(totalMoneyOpp, totalShareSame);
+      //create resolution
+      const resolution = await db.resolution.create({
+        data: {
+          eventId: input.id,
+          isAgree: input.isAgree,
+          lastHistoryId: latestEventHistory.id,
+        },
+      });
+
+      // create resolutionPayout data
+      const data: {
+        resolutionId: string;
+        userId: string;
+        payoutAmount: number;
+        BetHistoryId: string;
+      }[] = [];
+      event.eventHistories.forEach((e) => {
+        if (e.isAgree === input.isAgree && e.boughtById != "cloab86li0000tfe7ydv7e63z") {
+          data.push({
+            resolutionId: resolution.id,
+            userId: e.boughtById,
+            payoutAmount:
+              e.totalPrice.toNumber() +
+              (e.shareAmount / totalShareSame) * totalMoneyOpp,
+            BetHistoryId: e.id,
+          });
+        }
+      });
+
+      // create resolutionPayout
+      await db.resolutionPayout.createMany({
+        data: data,
+      });
+
+      // update user amount
+      data.forEach((e) => {
+        void db.user.update({
+          where: { id: e.userId },
+          data: {
+            amount: {
+              increment: e.payoutAmount,
+            },
+          },
+        });
+        console.log(e.userId, e.payoutAmount);
+      });
+
+      // update event
+      const updatedResult = await db.event.update({
+        where: { id: input.id },
+        data: {
+          isResoluted: true,
+        },
+      });
+      return updatedResult;
     }),
 });

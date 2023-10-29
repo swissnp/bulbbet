@@ -19,6 +19,16 @@ export const betRouter = createTRPCRouter({
         totalPrice: true,
         shareAmount: true,
         event: true,
+        Resolution: {
+          select: {
+            isAgree: true,
+          }
+        },
+        ResolutionPayout: {
+          select:{
+            payoutAmount: true,
+          }
+        }
       },
     });
     return result.map((e) => ({

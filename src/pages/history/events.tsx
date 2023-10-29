@@ -18,14 +18,17 @@ const CreatedEventHistory = () => {
         <div className="grid grid-cols-1 gap-4 gap-x-5 px-4 pb-10 md:grid-cols-2 lg:grid-cols-3">
           {events?.map((event) => {
             return (
-              <div className="card w-full bg-base-200 shadow-xl" key={event.id}>
+              <div
+                className="card card-compact w-72 bg-base-200 shadow-xl"
+                key={event.id}
+              >
                 <div>
-                  <div className="flex h-72 w-full flex-grow-0 overflow-hidden rounded-t-xl lg:h-96 lg:w-96 ">
+                  <div className="flex h-72 w-72 flex-grow-0 overflow-hidden rounded-t-xl ">
                     <Image
                       src={event.imageUrl}
                       alt="Picture of this event"
-                      height={384}
-                      width={384}
+                      height={288}
+                      width={288}
                       className="object-cover"
                     />
                   </div>
@@ -42,8 +45,8 @@ const CreatedEventHistory = () => {
                   </p>
                 </div>
                 <div className="card-body">
-                  <h2 className="card-title">{event.name}</h2>
-                  <p>{event.resolutionDetails}</p>
+                  <h2 className="card-title line-clamp-2">{event.name}</h2>
+                  <p className="line-clamp-2">{event.resolutionDetails}</p>
                   <div className="card-actions justify-end">
                     {event.resolutedAt && event.resolutedAt < new Date() ? (
                       <button className={`btn btn-primary`}>Resolute</button>

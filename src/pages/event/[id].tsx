@@ -171,6 +171,11 @@ const EventPage = () => {
                         {errors.shareAmount.message}
                       </p>
                     )}
+                    {errors.root && (
+                      <p className="pt-1 text-sm text-error">
+                        {errors.root.message}
+                      </p>
+                    )}
                   </div>
                   <div className="pt-4">
                     <button

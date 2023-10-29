@@ -1,12 +1,11 @@
-import { type RouterOutputs } from "~/utils/api";
 import Link from "next/link";
-const PurchaseModal = ({
+const ResoluteModal = ({
   modalId,
   data,
   onClick,
 }: {
   modalId: string;
-  data: RouterOutputs["bet"]["purchase"] | undefined;
+  data: { isAgree: boolean };
   onClick: () => void;
 }) => {
   return (
@@ -14,9 +13,11 @@ const PurchaseModal = ({
       <div className="modal-box">
         {data && (
           <div>
-            <h3 className="text-2xl font-bold">Betting Confirmed 🤙🏻</h3>
-            <p className="py-4"></p>
-            <table className="table">
+            <h3 className="text-2xl font-bold">Resolution Confirmed 🤙🏻</h3>
+            <p className="py-4">
+              You voted: {data.isAgree ? "Yes ✅" : "No ❌"}
+            </p>
+            {/* <table className="table">
               <thead>
                 <tr>
                   <th className="text-lg font-bold">Bet on</th>
@@ -45,15 +46,15 @@ const PurchaseModal = ({
                   </td>
                 </tr>
               </thead>
-            </table>
+            </table> */}
             <div className="modal-action">
               <form method="dialog">
                 <button className="btn" onClick={onClick}>
-                  Continue Betting
+                  Go to Home
                 </button>
               </form>
-              <Link className="btn btn-primary" href="/history/bettings">
-                View Your Bettings
+              <Link className="btn btn-primary" href="/history/events">
+                View Your Events
               </Link>
             </div>
           </div>
@@ -62,4 +63,4 @@ const PurchaseModal = ({
     </dialog>
   );
 };
-export default PurchaseModal;
+export default ResoluteModal;

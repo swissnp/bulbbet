@@ -119,12 +119,12 @@ model Resolution {
     resoluteAt DateTime @default(now())
     lastHistoryId String @unique
     lastHistory EventHistory @relation(fields: [lastHistoryId], references: [id])
-    resolutionPayouts ResolutionPayout?
+    resolutionPayouts ResolutionPayout[]
 }
 
 model ResolutionPayout {
     id     String     @id @default(cuid())
-    resolutionId String @unique
+    resolutionId String
     resolution Resolution @relation(fields: [resolutionId], references: [id])
     userId String
     user User @relation(fields: [userId], references: [id])

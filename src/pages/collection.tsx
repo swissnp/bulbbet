@@ -9,6 +9,7 @@ import { api } from "~/utils/api";
 import Header from "~/components/Header";
 import Link from "next/link";
 import { useEffect } from "react";
+import CountDown from "~/components/Countdown";
 export default function Interest() {
   const {
     data: searchResults,
@@ -63,9 +64,12 @@ export default function Interest() {
                 <div className="mb-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
                   {searchResults?.map((result) => {
                     return (
-                      <div
-                        className="card card-compact w-72 bg-base-200 shadow-xl"
+                      <Link
+                        className={`card card-compact w-72 bg-base-200 shadow-xl ${
+                          result.isEnded && "grayscale"
+                        }`}
                         key={result.id}
+                        href={`/event/${result.id}`}
                       >
                         <div>
                           <div className="relative flex h-72 w-full flex-grow-0 overflow-hidden rounded-t-xl">
@@ -100,15 +104,25 @@ export default function Interest() {
                             </div>
                           </div>
                           <div className="card-actions justify-end">
-                            <Link
-                              className={`btn btn-primary`}
-                              href={`/event/${result.id}`}
-                            >
-                              Purchase
-                            </Link>
+                            {!result.isEnded ? (
+                              <div className="flex flex-col gap-2">
+                                <div className="flex w-full items-center justify-center">
+                                  <p className="badge badge-secondary flex-grow-0 text-lg">
+                                    Time Left
+                                  </p>
+                                </div>
+                                <CountDown
+                                  tillDateTime={
+                                    result?.resolutedAt ?? new Date()
+                                  }
+                                />
+                              </div>
+                            ) : (
+                              <div className="btn btn-disabled">Ended</div>
+                            )}
                           </div>
                         </div>
-                      </div>
+                      </Link>
                     );
                   })}
                 </div>

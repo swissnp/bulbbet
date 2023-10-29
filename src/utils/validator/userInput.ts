@@ -32,3 +32,10 @@ export const SearchSchema = z.object({
 })
 
 export type ISearchSchema = z.infer<typeof SearchSchema>;
+
+export const ResolutionSchema = z.object({
+  id: z.string(),
+  isAgree: z.boolean(),
+})
+
+export type IResolutionSchema = z.infer<typeof ResolutionSchema>;

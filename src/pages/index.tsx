@@ -40,7 +40,7 @@ const TrendingEvent = () => {
     <>
       <div className="flex w-full justify-between px-5 text-4xl font-bold md:px-12">
         <div className="">📈 Trending events</div>
-        <Link href="/listings">
+        <Link href="/collection">
           <div className="btn btn-primary">View all</div>
         </Link>
       </div>
