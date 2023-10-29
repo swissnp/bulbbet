@@ -24,7 +24,7 @@ const Footer = () => {
           </a>
           <Link
             href={
-              "https://www.youtube.com/watch?v=dQw4w9WgXcQ&pp=ygUXTmV2ZXIgR29ubmEgR2l2ZSBZb3UgVXA%3D"
+              "https://www.youtube.com/watch?v=dQw4w9WgXcQ&pp=ygUXTmV2ZXIgR29ubmEgR2l2ZSBZb3UgVXA%3D" // rick roll
             }
             className="transition-all duration-200 hover:scale-[1.7] hover:text-red-600"
           >

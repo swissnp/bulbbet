@@ -9,7 +9,6 @@ import { api } from "~/utils/api";
 import Header from "~/components/Header";
 import Link from "next/link";
 import { useEffect } from "react";
-import Footer from "~/components/Footer";
 export default function Interest() {
   const {
     data: searchResults,
@@ -65,7 +64,7 @@ export default function Interest() {
                   {searchResults?.map((result) => {
                     return (
                       <div
-                        className="card-compact card w-72 bg-base-200 shadow-xl"
+                        className="card card-compact w-72 bg-base-200 shadow-xl"
                         key={result.id}
                       >
                         <div>

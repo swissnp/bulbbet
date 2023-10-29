@@ -3,7 +3,6 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import Header from "~/components/Header";
 import Image from "next/image";
-
 import { Test } from "~/components/Chart";
 import { api } from "~/utils/api";
 import { useForm, Controller } from "react-hook-form";
@@ -18,83 +17,10 @@ import { appRouter } from "~/server/api/root";
 import { createServerSideHelpers } from "@trpc/react-query/server";
 import superjson from "superjson";
 import Carousel from "~/components/Carousel";
-import { type RouterOutputs } from "~/utils/api";
-import Link from "next/link";
-import Footer from "~/components/Footer";
-
-const Modal = ({
-  modalId,
-  data,
-  onClick,
-  isLoading,
-}: {
-  modalId: string;
-  data: RouterOutputs["bet"]["purchase"] | undefined;
-  onClick: () => void;
-  isLoading: boolean;
-}) => {
-  return (
-    <dialog id={modalId} className="modal">
-      <div className="modal-box">
-        {data ? (
-          <div>
-            <h3 className="text-2xl font-bold">Betting Confirmed 🤙🏻</h3>
-            <p className="py-4"></p>
-            <table className="table">
-              <thead>
-                <tr>
-                  <th className="text-lg font-bold">Bet on</th>
-                  <th className="text-lg font-bold">Price</th>
-                  <th className="text-lg font-bold">Shares</th>
-                  <th className="text-lg font-bold">Total</th>
-                </tr>
-                <tr>
-                  <td
-                    className={`text-lg font-bold ${
-                      data.isAgree ? "text-success" : "text-error"
-                    }`}
-                  >
-                    {data.isAgree ? "Yes ✅" : "No ❌"}
-                  </td>
-                  <td className="text-lg font-normal">
-                    {
-                      +(
-                        data.isAgree ? data.agreePrice : 100 - data.agreePrice
-                      ).toFixed(2)
-                    }
-                  </td>
-                  <td className="text-lg font-normal">{data.shareAmount}</td>
-                  <td className="text-lg font-normal">
-                    {+data.totalPrice.toFixed(2)}
-                  </td>
-                </tr>
-              </thead>
-            </table>
-            <div className="modal-action">
-              <form method="dialog">
-                <button className="btn" onClick={onClick}>
-                  Continue Shopping
-                </button>
-              </form>
-              <Link className="btn btn-primary" href="/history/bettings">
-                View Your Bettings
-              </Link>
-            </div>
-          </div>
-        ) : (
-          <div className="w-full items-center justify-center">
-            {isLoading ? (
-              <div className="loading loading-spinner"></div>
-            ) : (
-              "Something went wrong"
-            )}
-          </div>
-        )}
-      </div>
-    </dialog>
-  );
-};
-
+// import Footer from "~/components/Footer";
+import dynamic from "next/dynamic";
+const PurchaseModal = dynamic(() => import("~/components/PurchaseModal"));
+const Footer = dynamic(() => import("~/components/Footer"));
 const EventPage = () => {
   const router = useRouter();
   const trendingData = api.event.getTrending.useQuery(undefined);
@@ -116,6 +42,12 @@ const EventPage = () => {
         await router.push("/balance/withdraw-unsuccess-zero");
       }
       setError("root", { message: error.message, type: "manual" });
+    },
+    onSuccess: () => {
+      if (document)
+        (
+          document.getElementById("purchase-modal") as HTMLDialogElement
+        ).showModal();
     },
   });
   const {
@@ -148,11 +80,10 @@ const EventPage = () => {
       </Head>
       <main className=" flex min-h-screen w-screen flex-col">
         <Header />
-        <Modal
+        <PurchaseModal
           modalId="purchase-modal"
           data={purchaseResult}
           onClick={onClick}
-          isLoading={isLoading || isSubmitting}
         />
         <div className={`relative mt-24 flex flex-col justify-center px-4`}>
           <div
@@ -166,7 +97,9 @@ const EventPage = () => {
                   <div className="relative h-full w-full">
                     <Image
                       src={data?.imageUrl ?? ""}
+                      priority
                       alt="Picture of this event"
+                      quality={75}
                       fill
                       className="-z-10 object-cover"
                     />
@@ -247,12 +180,6 @@ const EventPage = () => {
                     `}
                       onClick={handleSubmit((data) => {
                         mutate(data);
-                        if (document)
-                          (
-                            document.getElementById(
-                              "purchase-modal",
-                            ) as HTMLDialogElement
-                          ).showModal();
                       })}
                     >
                       {data?.isEnded ? "ENDED" : "PURCHASE"}
