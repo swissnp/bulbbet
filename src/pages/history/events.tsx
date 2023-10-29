@@ -19,8 +19,9 @@ const CreatedEventHistory = () => {
         <div className="grid grid-cols-1 gap-4 gap-x-5 px-4 pb-10 md:grid-cols-2 lg:grid-cols-3">
           {events?.map((event) => {
             return (
-              <div
-                className="card card-compact w-72 bg-base-200 shadow-xl"
+              <Link
+                href={`/event/${event.id}`}
+                className="card card-compact w-72 bg-base-200 shadow-xl transition duration-200 hover:scale-[1.01] hover:shadow-2xl"
                 key={event.id}
               >
                 <div>
@@ -50,12 +51,25 @@ const CreatedEventHistory = () => {
                   <p className="line-clamp-2">{event.resolutionDetails}</p>
                   <div className="card-actions justify-end">
                     {event.resolutedAt && event.resolutedAt < new Date() ? (
-                      <Link
-                        className={`btn btn-primary`}
-                        href={`/resolute?id=${event.id}`}
-                      >
-                        Resolute
-                      </Link>
+                      <>
+                        {event.isResoluted ? (
+                          <div className="text-lg">
+                            Resoluted As{" "}
+                            {event.resolution?.isAgree ? (
+                              <span className="text-success">Yes </span>
+                            ) : (
+                              <span className="text-error">No </span>
+                            )}
+                          </div>
+                        ) : (
+                          <Link
+                            className={`btn btn-primary`}
+                            href={`/resolute?id=${event.id}`}
+                          >
+                            Resolute
+                          </Link>
+                        )}
+                      </>
                     ) : (
                       <div className="flex flex-col gap-2">
                         <div className="flex w-full items-center justify-center">
@@ -70,7 +84,7 @@ const CreatedEventHistory = () => {
                     )}
                   </div>
                 </div>
-              </div>
+              </Link>
             );
           })}
           {events?.length == 0 && (

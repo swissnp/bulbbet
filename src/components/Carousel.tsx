@@ -22,7 +22,7 @@ const Carousel = ({
             <Link
               href={`/event/${id}`}
               key={id}
-              className="card card-compact relative flex h-full w-72 flex-none overflow-hidden rounded-xl shadow-md transition hover:scale-[1.01] hover:shadow-2xl"
+              className="card card-compact relative flex h-full w-72 flex-none overflow-hidden rounded-xl shadow-md transition duration-200 hover:scale-[1.01] hover:shadow-2xl"
             >
               <div className="relative h-72 w-72 overflow-hidden">
                 <Image

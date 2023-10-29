@@ -90,7 +90,7 @@ model Event {
     imageUrl String
     nextAgreePrice Decimal @default(50)
     eventHistories EventHistory[]
-    resolutions Resolution[]
+    resolution Resolution?
 
     @@index([name])
     @@index([isResoluted])
@@ -113,7 +113,7 @@ model EventHistory {
 
 model Resolution {
     id     String     @id @default(cuid())
-    eventId String
+    eventId String @unique
     event Event @relation(fields: [eventId], references: [id])
     isAgree Boolean
     resoluteAt DateTime @default(now())

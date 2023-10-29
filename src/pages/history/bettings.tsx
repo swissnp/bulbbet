@@ -3,7 +3,7 @@ import { api } from "~/utils/api";
 import Header from "~/components/Header";
 import Image from "next/image";
 import Footer from "~/components/Footer";
-
+import Link from "next/link";
 const BettingHistory = () => {
   const { data: events } = api.bet.getMyBets.useQuery(undefined);
   return (
@@ -16,7 +16,11 @@ const BettingHistory = () => {
         <div className="grid grid-cols-1 gap-4 gap-x-5 px-4 pb-10 md:grid-cols-2 lg:grid-cols-3">
           {events?.map((history) => {
             return (
-              <div className="card w-72 bg-base-200 shadow-xl" key={history.id}>
+              <Link
+                href={`/event/${history.event.id}`}
+                className="card w-72 bg-base-200 shadow-xl transition duration-200 hover:scale-[1.01] hover:shadow-2xl"
+                key={history.id}
+              >
                 <div>
                   <div className="flex h-72 w-72 flex-grow-0 overflow-hidden rounded-t-xl">
                     <Image
@@ -72,7 +76,7 @@ const BettingHistory = () => {
                     )}
                   </div>
                 </div>
-              </div>
+              </Link>
             );
           })}
           {events?.length == 0 && (

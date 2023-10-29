@@ -66,6 +66,17 @@ export const eventRouter = createTRPCRouter({
     const result = await db.event.findMany({
       where: { createdBy: { id: ctx.session.user.id } },
       orderBy: { resolutedAt: "asc" },
+      select:{
+        id: true,
+        name: true,
+        description: true,
+        imageUrl: true,
+        resolutedAt: true,
+        nextAgreePrice: true,
+        isResoluted: true,
+        resolutionDetails: true,
+        resolution: true
+      }
     });
     return result.map((e) => ({
       ...e,
