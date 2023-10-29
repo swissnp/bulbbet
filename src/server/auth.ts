@@ -1,4 +1,5 @@
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
+import { type Decimal } from "@prisma/client/runtime/library";
 import { type GetServerSidePropsContext } from "next";
 import {
   getServerSession,
@@ -28,7 +29,7 @@ declare module "next-auth" {
   }
 
   interface User {
-    amount: number;
+    amount: Decimal;
   }
 }
 
@@ -44,7 +45,7 @@ export const authOptions: NextAuthOptions = {
       user: {
         ...session.user,
         id: user.id,
-        amount: user.amount,
+        amount: user.amount.toNumber(),
       },
     }),
     // signIn: ({ user }) => {
