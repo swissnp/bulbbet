@@ -24,9 +24,13 @@ import Link from "next/link";
 const Modal = ({
   modalId,
   data,
+  onClick,
+  isLoading,
 }: {
   modalId: string;
   data: RouterOutputs["bet"]["purchase"] | undefined;
+  onClick: () => void;
+  isLoading: boolean;
 }) => {
   return (
     <dialog id={modalId} className="modal">
@@ -52,24 +56,38 @@ const Modal = ({
                     {data.isAgree ? "Yes ✅" : "No ❌"}
                   </td>
                   <td className="text-lg font-normal">
-                    {data.isAgree ? data.agreePrice : 100 - data.agreePrice}
+                    {
+                      +(
+                        data.isAgree ? data.agreePrice : 100 - data.agreePrice
+                      ).toFixed(2)
+                    }
                   </td>
                   <td className="text-lg font-normal">{data.shareAmount}</td>
-                  <td className="text-lg font-normal">{data.totalPrice}</td>
+                  <td className="text-lg font-normal">
+                    {+data.totalPrice.toFixed(2)}
+                  </td>
                 </tr>
               </thead>
             </table>
             <div className="modal-action">
-              <Link className="btn-primary" href="/history/bettings">
+              <form method="dialog">
+                <button className="btn" onClick={onClick}>
+                  Continue Shopping
+                </button>
+              </form>
+              <Link className="btn btn-primary" href="/history/bettings">
                 View Your Bettings
-              </Link>
-              <Link className="btn" href="">
-                Close
               </Link>
             </div>
           </div>
         ) : (
-          <div>Something went wrong</div>
+          <div className="w-full items-center justify-center">
+            {isLoading ? (
+              <div className="loading loading-spinner"></div>
+            ) : (
+              "Something went wrong"
+            )}
+          </div>
         )}
       </div>
     </dialog>
@@ -79,7 +97,7 @@ const Modal = ({
 const EventPage = () => {
   const router = useRouter();
   const trendingData = api.event.getTrending.useQuery(undefined);
-  const { data } = api.event.getEventById.useQuery(
+  const { data, refetch } = api.event.getEventById.useQuery(
     {
       id: router.query.id as string,
     },
@@ -105,7 +123,8 @@ const EventPage = () => {
     control,
     watch,
     setError,
-    formState: { errors, isValid },
+    reset,
+    formState: { errors, isValid, isSubmitting },
   } = useForm<IPurchaseSchema>({
     resolver: zodResolver(PurchaseSchema),
     defaultValues: {
@@ -116,6 +135,10 @@ const EventPage = () => {
     mode: "onBlur",
   });
 
+  const onClick = () => {
+    void refetch();
+    reset();
+  };
   return (
     <>
       <Head>
@@ -124,7 +147,12 @@ const EventPage = () => {
       </Head>
       <main className=" flex min-h-screen w-screen flex-col">
         <Header />
-        <Modal modalId="purchase-modal" data={purchaseResult} />
+        <Modal
+          modalId="purchase-modal"
+          data={purchaseResult}
+          onClick={onClick}
+          isLoading={isLoading || isSubmitting}
+        />
         <div className={`relative mt-24 flex flex-col justify-center px-4`}>
           <div
             className={`mb-5 flex flex-col overflow-hidden rounded-xl bg-neutral-focus shadow-2xl ${
@@ -213,19 +241,17 @@ const EventPage = () => {
                   <div className="pt-4">
                     <button
                       className={`btn btn-primary relative ${
-                        isLoading && "loading loading-spinner"
+                        (isLoading || isSubmitting) && "loading loading-spinner"
                       } ${data?.isEnded && "btn-disabled"}
                     `}
                       onClick={handleSubmit((data) => {
                         mutate(data);
-                        if (purchaseResult) {
-                          if (document)
-                            (
-                              document.getElementById(
-                                "purchase-modal",
-                              ) as HTMLDialogElement
-                            ).showModal();
-                        }
+                        if (document)
+                          (
+                            document.getElementById(
+                              "purchase-modal",
+                            ) as HTMLDialogElement
+                          ).showModal();
                       })}
                     >
                       {data?.isEnded ? "ENDED" : "PURCHASE"}
