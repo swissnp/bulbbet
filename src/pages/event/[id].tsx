@@ -20,6 +20,7 @@ import superjson from "superjson";
 import Carousel from "~/components/Carousel";
 import { type RouterOutputs } from "~/utils/api";
 import Link from "next/link";
+import Footer from "~/components/Footer";
 
 const Modal = ({
   modalId,
@@ -304,7 +305,7 @@ const EventPage = () => {
             </div>
           </div>
         </div>
-        {/* <Footer /> */}
+        <Footer />
       </main>
     </>
   );

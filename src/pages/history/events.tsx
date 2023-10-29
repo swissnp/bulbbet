@@ -4,6 +4,7 @@ import Image from "next/image";
 import CountDown from "~/components/Countdown";
 import { getServerAuthSession } from "~/server/auth";
 import type { GetServerSidePropsContext } from "next";
+import Footer from "~/components/Footer";
 const CreatedEventHistory = () => {
   const { data: events } = api.event.getMyEvents.useQuery(undefined);
 
@@ -12,7 +13,7 @@ const CreatedEventHistory = () => {
       <Header />
       <div className="pt-28">
         <h1 className="px-5 py-3 pb-10 text-3xl font-extrabold tracking-tight text-white sm:text-[3rem]">
-          Created Events
+          My Events
         </h1>
         <div className="grid grid-cols-1 gap-4 gap-x-5 px-4 pb-10 md:grid-cols-2 lg:grid-cols-3">
           {events?.map((event) => {
@@ -73,6 +74,7 @@ const CreatedEventHistory = () => {
           )}
         </div>
       </div>
+      <Footer />
     </div>
   );
 };

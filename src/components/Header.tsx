@@ -140,7 +140,7 @@ const Header = () => {
                       <Link href="/history/bettings">Betting History</Link>
                     </li>
                     <li>
-                      <Link href="/history/events">Event History</Link>
+                      <Link href="/history/events">My Events</Link>
                     </li>
                     <li>
                       <button onClick={() => signOut()}>Sign out</button>

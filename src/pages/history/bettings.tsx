@@ -2,6 +2,7 @@ import CountDown from "~/components/Countdown";
 import { api } from "~/utils/api";
 import Header from "~/components/Header";
 import Image from "next/image";
+import Footer from "~/components/Footer";
 
 const BettingHistory = () => {
   const { data: events } = api.bet.getMyBets.useQuery(undefined);
@@ -80,6 +81,7 @@ const BettingHistory = () => {
           )}
         </div>
       </div>
+      <Footer />
     </div>
   );
 };

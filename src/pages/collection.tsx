@@ -9,6 +9,7 @@ import { api } from "~/utils/api";
 import Header from "~/components/Header";
 import Link from "next/link";
 import { useEffect } from "react";
+import Footer from "~/components/Footer";
 export default function Interest() {
   const {
     data: searchResults,
@@ -64,7 +65,7 @@ export default function Interest() {
                   {searchResults?.map((result) => {
                     return (
                       <div
-                        className="card w-72 bg-base-200 shadow-xl"
+                        className="card-compact card w-72 bg-base-200 shadow-xl"
                         key={result.id}
                       >
                         <div>
@@ -78,27 +79,27 @@ export default function Interest() {
                           </div>
                         </div>
                         <progress
-                          className={`flex-inline progress ${
-                            true ? "progress-success" : "bg-error"
-                          } flex w-full`}
+                          className={`flex-inline progress progress-success flex w-full bg-error`}
                           value={result.nextAgreePrice}
                           max="100"
                         ></progress>
-                        <div className="flex w-full flex-row justify-between px-1">
-                          <p className="text-center text-lg">
-                            {result.nextAgreePrice}
-                          </p>
-                          <p className="text-center text-lg">
-                            {+(100 - result.nextAgreePrice).toFixed(2)}
-                          </p>
-                        </div>
-                        <div className="card-body">
-                          <h2 className="card-title line-clamp-2">
-                            {result.name}
-                          </h2>
-                          <p className="line-clamp-2">
-                            {result.resolutionDetails}
-                          </p>
+                        <div className="card-body justify-between">
+                          <div>
+                            <h2 className="card-title line-clamp-2">
+                              {result.name}
+                            </h2>
+                            <p className="line-clamp-2">
+                              {result.resolutionDetails}
+                            </p>
+                            <div className="flex w-full gap-2 pt-1 text-base font-semibold">
+                              <span className="text-success">
+                                Yes {result.nextAgreePrice}{" "}
+                              </span>
+                              <span className="text-error">
+                                No {+(100 - result.nextAgreePrice).toFixed(2)}
+                              </span>
+                            </div>
+                          </div>
                           <div className="card-actions justify-end">
                             <Link
                               className={`btn btn-primary`}
