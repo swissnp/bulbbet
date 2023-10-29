@@ -65,6 +65,7 @@ model User {
     posts         Post[]
     events        Event[]
     eventHistories EventHistory[]
+    payouts       ResolutionPayout[]
 }
 
 model VerificationToken {
@@ -107,6 +108,7 @@ model EventHistory {
     boughtById String
     boughtBy   User   @relation(fields: [boughtById], references: [id])
     Resolution Resolution?
+    ResolutionPayout ResolutionPayout?
 }
 
 model Resolution {
@@ -117,4 +119,18 @@ model Resolution {
     resoluteAt DateTime @default(now())
     lastHistoryId String @unique
     lastHistory EventHistory @relation(fields: [lastHistoryId], references: [id])
+    resolutionPayouts ResolutionPayout?
+}
+
+model ResolutionPayout {
+    id     String     @id @default(cuid())
+    resolutionId String @unique
+    resolution Resolution @relation(fields: [resolutionId], references: [id])
+    userId String
+    user User @relation(fields: [userId], references: [id])
+    payoutAmount Decimal
+    isPaid Boolean @default(false)
+    paidAt DateTime?
+    BetHistoryId String @unique
+    BetHistory EventHistory @relation(fields: [BetHistoryId], references: [id])
 }
