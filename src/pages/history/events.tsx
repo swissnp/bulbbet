@@ -5,6 +5,7 @@ import CountDown from "~/components/Countdown";
 import { getServerAuthSession } from "~/server/auth";
 import type { GetServerSidePropsContext } from "next";
 import Footer from "~/components/Footer";
+import Link from "next/link";
 const CreatedEventHistory = () => {
   const { data: events } = api.event.getMyEvents.useQuery(undefined);
 
@@ -49,7 +50,12 @@ const CreatedEventHistory = () => {
                   <p className="line-clamp-2">{event.resolutionDetails}</p>
                   <div className="card-actions justify-end">
                     {event.resolutedAt && event.resolutedAt < new Date() ? (
-                      <button className={`btn btn-primary`}>Resolute</button>
+                      <Link
+                        className={`btn btn-primary`}
+                        href={`/resolute?id=${event.id}`}
+                      >
+                        Resolute
+                      </Link>
                     ) : (
                       <div className="flex flex-col gap-2">
                         <div className="flex w-full items-center justify-center">

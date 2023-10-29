@@ -51,9 +51,13 @@ const BettingHistory = () => {
                   <div className="card-actions justify-end">
                     {history.event.resolutedAt &&
                     history.event.resolutedAt < new Date() ? (
-                      <button className={`btn btn-disabled btn-sm mt-5`}>
-                        Waiting for Resolution
-                      </button>
+                      <div>
+                        {
+                          <button className={`btn btn-disabled btn-sm mt-5`}>
+                            Waiting for Resolution
+                          </button>
+                        }
+                      </div>
                     ) : (
                       <div className="flex flex-col gap-2">
                         <div className="flex w-full items-center justify-center">
