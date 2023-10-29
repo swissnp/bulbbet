@@ -6,9 +6,6 @@ import { SearchSchema, type ISearchSchema } from "~/utils/validator/userInput";
 // import { options } from "~/utils/dataOptions";
 // import { UserSearchResultCard } from "~/components/userSearchResultCard";
 import { api } from "~/utils/api";
-
-import type { GetServerSidePropsContext } from "next";
-import { getServerAuthSession } from "~/server/auth";
 import Header from "~/components/Header";
 import Link from "next/link";
 import { useEffect } from "react";
@@ -122,19 +119,4 @@ export default function Interest() {
       </main>
     </>
   );
-}
-
-export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const session = await getServerAuthSession(context);
-  if (!session) {
-    return {
-      redirect: {
-        destination: "/",
-        permanent: false,
-      },
-    };
-  }
-  return {
-    props: {},
-  };
 }
