@@ -22,7 +22,7 @@ const Carousel = ({
             <Link
               href={`/event/${id}`}
               key={id}
-              className="card card-compact relative flex h-full w-72 flex-none overflow-hidden rounded-xl shadow-md transition hover:scale-[1.01] hover:shadow-2xl"
+              className="card-compact card relative flex h-full w-72 flex-none overflow-hidden rounded-xl shadow-md transition hover:scale-[1.01] hover:shadow-2xl"
             >
               <div className="relative h-72 w-72 overflow-hidden">
                 <Image
@@ -35,7 +35,7 @@ const Carousel = ({
               <div className="bg-base-200">
                 <progress
                   className="flex-inline progress progress-success flex w-full bg-error"
-                  value={nextAgreePrice.toString()}
+                  value={nextAgreePrice}
                   max="100"
                 ></progress>
               </div>
@@ -45,11 +45,9 @@ const Carousel = ({
                     {name}
                   </div>
                   <div className="flex w-full gap-2 text-base font-semibold">
-                    <span className="text-success">
-                      Yes {nextAgreePrice.toString()}{" "}
-                    </span>
+                    <span className="text-success">Yes {nextAgreePrice} </span>
                     <span className="text-error">
-                      No {100 - nextAgreePrice}
+                      No {+(100 - nextAgreePrice).toFixed(2)}
                     </span>
                   </div>
                 </div>

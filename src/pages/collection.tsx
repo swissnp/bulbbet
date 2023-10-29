@@ -81,15 +81,15 @@ export default function Interest() {
                           className={`flex-inline progress ${
                             true ? "progress-success" : "bg-error"
                           } flex w-full`}
-                          value={result.nextAgreePrice.toString()}
+                          value={result.nextAgreePrice}
                           max="100"
                         ></progress>
                         <div className="flex w-full flex-row justify-between px-1">
                           <p className="text-center text-lg">
-                            {result.nextAgreePrice.toString()}
+                            {result.nextAgreePrice}
                           </p>
                           <p className="text-center text-lg">
-                            {100 - parseFloat(result.nextAgreePrice.toString())}
+                            {+(100 - result.nextAgreePrice).toFixed(2)}
                           </p>
                         </div>
                         <div className="card-body">

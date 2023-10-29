@@ -34,62 +34,71 @@ export default function resoluteEvent() {
   //   },
   // });
 
-  const { data: event } = api.event.getEventData.useQuery({id:"clo5e377r0000l909o7mr5q7h"});
+  const { data: event } = api.event.getEventData.useQuery({
+    id: "clo5e377r0000l909o7mr5q7h",
+  });
 
   return (
-    event &&
-    <>
-      <div className="flex min-h-screen flex-col items-center justify-center align-middle ">
-        <Header />
-        <div className="m-4 mt-24 grid grid-cols-1 gap-4 rounded-2xl bg-base-200 p-8 drop-shadow-2xl md:min-w-[30rem]">
-          <h1 className="px-2 py-5 text-4xl">
-            <b>Resolute Event</b>
-          </h1>
-          <div className="flex h-72 w-full flex-grow-0 overflow-hidden rounded-t-xl lg:h-96 lg:w-96 ">     
-            <Image
-              src={event.imageUrl}
-              alt="Picture of this event"
-              height={384}
-              width={384}
-              className="object-cover"
-            />
-          </div>
-          <div className="font-semibold text-2xl mt-1">{event.name}</div>
-          <progress
-            className="flex-inline progress progress-success flex w-full bg-error"
-            value={event.nextAgreePrice.toString()}
-            max="100"
-          ></progress>
-          <div className="flex w-full flex-row justify-between px-1">
-            <p className="text-center text-lg">
-              {event.nextAgreePrice.toString()}
-            </p>
-            <p className="text-center text-lg">
-              {100 - parseFloat(event.nextAgreePrice.toString())}
-            </p>
-          </div>
-          <div className="font-semibold text-2xl">Resolution :</div>
-          <div className="flex rounded-xl w-full">
-            <input 
-              type="radio" 
-              name="resolutionRadio" 
-              className="before:content-['Yes'] flex justify-center items-center before:opacity-80 checked:before:text-black radio flex-1 h-12 rounded-l-full rounded-r-none checked:bg-success" checked 
-            />
-            <input 
-              type="radio" 
-              name="resolutionRadio" 
-              className="before:content-['No'] flex justify-center items-center before:opacity-80 checked:before:text-black radio flex-1 h-12 rounded-r-full rounded-l-none checked:bg-error" 
-              checked
-            />
-          </div>
-          <div
-            className={`btn btn-primary`}
-            // className={`btn btn-primary ${!isValid && "btn-disabled"}`}
-            onClick={
-              () => {console.log("hello world tum mai pen krub")}
-            }
-          >Submit</div>
-          {/* <h1 className="px-2 py-5 text-4xl">
+    event && (
+      <>
+        <div className="flex min-h-screen flex-col items-center justify-center align-middle ">
+          <Header />
+          <div className="m-4 mt-24 grid grid-cols-1 gap-4 rounded-2xl bg-base-200 p-8 drop-shadow-2xl md:min-w-[30rem]">
+            <h1 className="px-2 py-5 text-4xl">
+              <b>Resolute Event</b>
+            </h1>
+            <div className="flex h-72 w-full flex-grow-0 overflow-hidden rounded-t-xl lg:h-96 lg:w-96 ">
+              <Image
+                src={event.imageUrl}
+                alt="Picture of this event"
+                height={384}
+                width={384}
+                className="object-cover"
+              />
+            </div>
+            <div className="mt-1 text-2xl font-semibold">{event.name}</div>
+            <progress
+              className="flex-inline progress progress-success flex w-full bg-error"
+              value={+event.nextAgreePrice.toFixed(2)}
+              max="100"
+            ></progress>
+            <div className="flex w-full flex-row justify-between px-1">
+              <p className="text-center text-lg">
+                {event.nextAgreePrice.toString()}
+              </p>
+              <p className="text-center text-lg">
+                {
+                  +(100 - parseFloat(event.nextAgreePrice.toString())).toFixed(
+                    2,
+                  )
+                }
+              </p>
+            </div>
+            <div className="text-2xl font-semibold">Resolution :</div>
+            <div className="flex w-full rounded-xl">
+              <input
+                type="radio"
+                name="resolutionRadio"
+                className="radio flex h-12 flex-1 items-center justify-center rounded-l-full rounded-r-none before:opacity-80 before:content-['Yes'] checked:bg-success checked:before:text-black"
+                checked
+              />
+              <input
+                type="radio"
+                name="resolutionRadio"
+                className="radio flex h-12 flex-1 items-center justify-center rounded-l-none rounded-r-full before:opacity-80 before:content-['No'] checked:bg-error checked:before:text-black"
+                checked
+              />
+            </div>
+            <div
+              className={`btn btn-primary`}
+              // className={`btn btn-primary ${!isValid && "btn-disabled"}`}
+              onClick={() => {
+                console.log("hello world tum mai pen krub");
+              }}
+            >
+              Submit
+            </div>
+            {/* <h1 className="px-2 py-5 text-4xl">
             <b>Create Event</b>
           </h1>
           <div className="grid grid-cols-1 gap-1">
@@ -177,9 +186,10 @@ export default function resoluteEvent() {
             {isSubmitting && <span className="loading loading-spinner"></span>}
             Continue
           </div> */}
+          </div>
         </div>
-      </div>
-      <Footer />
-    </>
+        <Footer />
+      </>
+    )
   );
 }

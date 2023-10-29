@@ -133,8 +133,8 @@ const Header = () => {
                   </div>
                 ) : (
                   <div>
-                    <li>
-                      <div>{+session.user.amount.toFixed(2)}💡</div>
+                    <li className="btn-disabled text-base-content">
+                      <p>{+session.user.amount.toFixed(2)}💡</p>
                     </li>
                     <li>
                       <Link href="/history/bettings">Betting History</Link>

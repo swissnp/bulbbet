@@ -42,9 +42,9 @@ const BettingHistory = () => {
                     >
                       {history.isAgree
                         ? `Betted: Yes ${history.totalPrice}💡 @${history.agreePrice}`
-                        : `Betted: No ${history.totalPrice}💡 @${
+                        : `Betted: No ${history.totalPrice}💡 @${+(
                             100 - history.agreePrice
-                          }`}
+                          ).toFixed(2)}`}
                     </p>
                   </div>
                   <div className="card-actions justify-end">

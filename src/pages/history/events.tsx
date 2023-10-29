@@ -31,15 +31,13 @@ const CreatedEventHistory = () => {
                 </div>
                 <progress
                   className="flex-inline progress progress-success flex w-full bg-error"
-                  value={event.nextAgreePrice.toString()}
+                  value={event.nextAgreePrice}
                   max="100"
                 ></progress>
                 <div className="flex w-full flex-row justify-between px-1">
+                  <p className="text-center text-lg">{event.nextAgreePrice}</p>
                   <p className="text-center text-lg">
-                    {event.nextAgreePrice.toString()}
-                  </p>
-                  <p className="text-center text-lg">
-                    {100 - parseFloat(event.nextAgreePrice.toString())}
+                    {+(100 - event.nextAgreePrice).toFixed(2)}
                   </p>
                 </div>
                 <div className="card-body">

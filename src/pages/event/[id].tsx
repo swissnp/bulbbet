@@ -144,7 +144,7 @@ const EventPage = () => {
                   </div>
                 </div>
                 <div className="w-full px-10 py-10 md:w-1/2 md:px-10">
-                  <h1 className="w-full text-ellipsis pb-6 text-5xl font-bold">
+                  <h1 className="mb-6 line-clamp-3 w-full overflow-hidden text-3xl font-bold sm:text-5xl">
                     {data?.name}
                   </h1>
                   <Controller
@@ -162,7 +162,7 @@ const EventPage = () => {
                           checked={value === true}
                           ref={ref}
                           aria-label={
-                            "Yes: " + (data?.nextAgreePrice ?? 0).toString()
+                            "Yes: " + +(data?.nextAgreePrice ?? 0).toFixed(2)
                           }
                         />
                         <input
@@ -176,12 +176,7 @@ const EventPage = () => {
                           ref={ref}
                           aria-label={
                             "No: " +
-                            (
-                              100 -
-                              (parseFloat(
-                                (data?.nextAgreePrice ?? 0).toString() ?? "0",
-                              ) ?? 0)
-                            ).toString()
+                            +(100 - (data?.nextAgreePrice ?? 0)).toFixed(2)
                           }
                         />
                       </div>
