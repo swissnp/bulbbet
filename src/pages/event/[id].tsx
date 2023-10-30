@@ -40,6 +40,9 @@ const EventPage = () => {
     isLoading,
   } = api.bet.purchase.useMutation({
     onError: async (error) => {
+      if (error.data?.code === "UNAUTHORIZED") {
+        await router.push("/auth/login");
+      }
       if (error.message === "Not enough money") {
         await router.push("/balance/withdraw-unsuccess-zero");
       }
