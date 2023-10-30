@@ -179,7 +179,9 @@ const Hero = () => {
           </AnimateOnScroll>
           <p className="py-6 text-3xl">Put your 💡 where your mouth is</p>
           {/* </AnimateOnScroll> */}
-          {/* <button className="btn btn-primary">Install Our App</button> */}
+          <Link className="btn btn-primary" href={"/collection"}>
+            See Our Listings
+          </Link>
         </div>
       </div>
     </div>
