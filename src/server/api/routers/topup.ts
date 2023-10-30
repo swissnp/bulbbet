@@ -75,7 +75,6 @@ export const topUpRouter = createTRPCRouter({
       // create a random token longer than 20 characters
       const token = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
       // save token to db
-      console.log(token)
       const created = await db.topUpToken.create({
         data: {
           token,
@@ -84,7 +83,6 @@ export const topUpRouter = createTRPCRouter({
           expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7),
         },
       })
-      console.log(created);
       return {
         token: created.token,
         url: `${env.NEXTAUTH_URL}/topup?token=${created.token}&amount=${created.amount.toNumber()}`,

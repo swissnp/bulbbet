@@ -33,7 +33,6 @@ export default function ResoluteEvent() {
 
   useEffect(() => {
     setValue("id", searchParams.get("id")!);
-    console.log(searchParams.get("id")!);
   }, [searchParams, setValue]);
   const { mutate } = api.event.resoluteEvent.useMutation({
     onSuccess: () => {

@@ -3,7 +3,6 @@ import { useSession } from "next-auth/react";
 import Headers from "~/components/Header";
 const AddBulbSuccess = () => {
   const session = useSession();
-  console.log(session);
   return (
     <div className="hero h-screen w-full select-none">
       <Headers />

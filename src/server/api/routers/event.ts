@@ -410,7 +410,6 @@ export const eventRouter = createTRPCRouter({
         }
         return acc;
       }, 0);
-      console.log(totalMoneyOpp, totalShareSame);
       //create resolution
       const resolution = await db.resolution.create({
         data: {
@@ -455,7 +454,6 @@ export const eventRouter = createTRPCRouter({
             },
           },
         });
-        console.log(e.userId, e.payoutAmount);
       });
 
       // update event
