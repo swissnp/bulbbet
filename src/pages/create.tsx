@@ -32,9 +32,6 @@ export default function Create() {
     },
   });
   const { data } = api.event.getPresignedUrl.useQuery(undefined, {
-    refetchOnMount: false,
-    refetchInterval: 3000 * 1000, // 50 minutes
-    refetchOnWindowFocus: false,
     enabled: !file,
   });
 

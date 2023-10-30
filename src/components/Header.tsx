@@ -143,6 +143,9 @@ const Header = () => {
                       <Link href="/history/events">My Events</Link>
                     </li>
                     <li>
+                      <Link href="/balance/withdraw-success">Withdra</Link>
+                    </li>
+                    <li>
                       <button onClick={() => signOut()}>Sign out</button>
                     </li>
                   </div>
