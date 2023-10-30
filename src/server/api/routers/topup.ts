@@ -1,24 +1,24 @@
-import { z } from "zod";
+// import { z } from "zod";
 import { TopUpSchema } from "~/utils/validator/userInput";
 import {
   createTRPCRouter,
   protectedProcedure,
-  publicProcedure,
+  // publicProcedure,
 } from "~/server/api/trpc";
-import { EventEmitter } from 'events';
-import { observable } from '@trpc/server/observable';
+// import { EventEmitter } from 'events';
+// import { observable } from '@trpc/server/observable';
 import { db } from "~/server/db";
 import { env } from "~/env.mjs";
-import { TRPCError } from "@trpc/server";
+// import { TRPCError } from "@trpc/server";
 
-const ee = new EventEmitter();
-type Post = {
-  id: string;
-  userId: string;
-  token: string;
-  amount: number;
-  expires: Date;
-}
+// const ee = new EventEmitter();
+// type Post = {
+//   id: string;
+//   userId: string;
+//   token: string;
+//   amount: number;
+//   expires: Date;
+// }
 export const topUpRouter = createTRPCRouter({
   // onAdd: protectedProcedure.subscription(() => {
   //   // return an `observable` with a callback which is triggered immediately
