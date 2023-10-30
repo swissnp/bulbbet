@@ -6,7 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { api } from "~/utils/api";
 import Header from "~/components/Header";
 import Footer from "~/components/Footer";
-
+import { useRouter } from "next/router";
 const TopupPage = () => {
   const {
     register,
@@ -16,7 +16,13 @@ const TopupPage = () => {
     resolver: zodResolver(TopUpSchema),
     mode: "onBlur",
   });
+  const router = useRouter();
   const { mutate, data } = api.topUp.createToken.useMutation();
+  api.topUp.onAdd.useSubscription(undefined, {
+    onData: () => {
+      void router.push(`/balance/add-success`);
+    },
+  });
   return (
     <div className="flex min-h-screen flex-col items-center justify-center">
       <Header />
@@ -42,7 +48,6 @@ const TopupPage = () => {
         <button
           className="btn btn-primary mt-3 w-full"
           onClick={handleSubmit((data) => {
-            console.log(data);
             mutate(data);
           })}
         >
