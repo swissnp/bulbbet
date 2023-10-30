@@ -15,7 +15,7 @@ export type IEventCreateSchema = z.infer<typeof eventCreateSchema>;
 
 export const VerificationEmailSchema = z.object({
   email: z.string().email('Please enter a valid email')
-  // .endsWith("chula.ac.th", "Email must be chula.ac.th"),
+  .endsWith("chula.ac.th", "Email must be chula.ac.th"),
 });
 export type IVerificationEmail = z.infer<typeof VerificationEmailSchema>;
 
@@ -39,3 +39,9 @@ export const ResolutionSchema = z.object({
 })
 
 export type IResolutionSchema = z.infer<typeof ResolutionSchema>;
+
+export const TopUpSchema = z.object({
+  amount: z.number().max(10000, {message: "You are too greedy Dumb Ass"})
+})
+
+export type ITopUpSchema = z.infer<typeof TopUpSchema>

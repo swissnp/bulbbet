@@ -48,12 +48,12 @@ export const authOptions: NextAuthOptions = {
         amount: user.amount.toNumber(),
       },
     }),
-    // signIn: ({ user }) => {
-    //   if (!user.email?.endsWith("chula.ac.th")) {
-    //     return false;
-    //   }
-    //   return true;
-    // }
+    signIn: ({ user }) => {
+      if (!user.email?.endsWith("chula.ac.th")) {
+        return false;
+      }
+      return true;
+    }
   },
   adapter: PrismaAdapter(db),
   // session: { strategy: "jwt" },
