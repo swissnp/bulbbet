@@ -11,6 +11,7 @@ import {
   PurchaseSchema,
 } from "~/utils/validator/userInput";
 import { db } from "~/server/db";
+import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { type GetStaticPaths, type GetStaticPropsContext } from "next";
 import { appRouter } from "~/server/api/root";
@@ -24,6 +25,7 @@ const Footer = dynamic(() => import("~/components/Footer"));
 const EventPage = () => {
   const router = useRouter();
   const trendingData = api.event.getTrending.useQuery(undefined);
+  const [trigger, setTrigger] = useState(false);
   const { data, refetch } = api.event.getEventById.useQuery(
     {
       id: router.query.id as string,
@@ -70,6 +72,7 @@ const EventPage = () => {
 
   const onClick = () => {
     void refetch();
+    setTrigger((prev) => !prev);
     reset();
   };
   return (
@@ -226,7 +229,7 @@ const EventPage = () => {
               <div className="divider py-5"></div>
               <div className="h-80">
                 <div className="pb-5 text-2xl font-bold">Pricing Graph</div>
-                <Test id={router.query.id as string} />
+                <Test id={router.query.id as string} trigger={trigger} />
               </div>
             </div>
           </div>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { api } from "~/utils/api";
 import {
   LineChart,
@@ -10,8 +10,8 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
-export const Test = ({ id }: { id: string }) => {
-  const { data, error } = api.event.getPriceChartPush.useQuery(
+export const Test = ({ id, trigger }: { id: string; trigger: boolean }) => {
+  const { data, error, refetch } = api.event.getPriceChartPush.useQuery(
     {
       id: id,
     },
@@ -19,6 +19,11 @@ export const Test = ({ id }: { id: string }) => {
       retry: false,
     },
   );
+
+  useEffect(() => {
+    console.log("refetch");
+    void refetch();
+  }, [trigger]);
   return (
     <div className="relative h-full w-full">
       <ResponsiveContainer width="100%" height="100%">
