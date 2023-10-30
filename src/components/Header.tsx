@@ -137,13 +137,16 @@ const Header = () => {
                       <p>{+session.user.amount.toFixed(2)}💡</p>
                     </li>
                     <li>
+                      <Link href="/balance/topup">Add Money</Link>
+                    </li>
+                    <li>
                       <Link href="/history/bettings">Betting History</Link>
                     </li>
                     <li>
                       <Link href="/history/events">My Events</Link>
                     </li>
                     <li>
-                      <Link href="/balance/withdraw-success">Withdra</Link>
+                      <Link href="/balance/withdraw-success">Withdraw</Link>
                     </li>
                     <li>
                       <button onClick={() => signOut()}>Sign out</button>

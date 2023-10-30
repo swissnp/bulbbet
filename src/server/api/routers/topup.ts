@@ -20,63 +20,55 @@ type Post = {
   expires: Date;
 }
 export const topUpRouter = createTRPCRouter({
-  onAdd: protectedProcedure.subscription(() => {
-    // return an `observable` with a callback which is triggered immediately
-    return observable<Post>((emit) => {
-      const onAdd = (data: Post) => {
-        // update user's amount
-        // emit data to client
-        emit.next(data);
-      };
-      // trigger `onAdd()` when `add` is triggered in our event emitter
-      ee.on('add', onAdd);
-      // unsubscribe function when client disconnects or stops subscribing
-      return () => {
-        ee.off('add', onAdd);
-      };
-    });
-  }),
-  add: publicProcedure
-    .input(
-      z.object({
-        token: z.string(),
-      }),
-    )
-    .mutation(async (opts) => {
-      if (opts.input.token) {
-        throw new TRPCError({
-          code: 'BAD_REQUEST',
-          message: 'ID must not be provided',
-        });
-      }
+  // onAdd: protectedProcedure.subscription(() => {
+  //   // return an `observable` with a callback which is triggered immediately
+  //   return observable<Post>((emit) => {
+  //     const onAdd = (data: Post) => {
+  //       // update user's amount
+  //       emit.next(data);
+  //     };
+  //     // trigger `onAdd()` when `add` is triggered in our event emitter
+  //     ee.on('add', onAdd);
+  //     // unsubscribe function when client disconnects or stops subscribing
+  //     return () => {
+  //       ee.off('add', onAdd);
+  //     };
+  //   });
+  // }),
+  // add: publicProcedure
+  //   .input(
+  //     z.object({
+  //       token: z.string(),
+  //     }),
+  //   )
+  //   .mutation(async (opts) => {
 
-      const token = await db.topUpToken.findFirst({
-        where:{userId: opts.input.token,}
-      })
+  //     const token = await db.topUpToken.findFirst({
+  //       where:{token: opts.input.token }
+  //     })
+  //     if(!token) {
+  //       throw new TRPCError({
+  //         code: 'BAD_REQUEST',
+  //         message: 'ID not found',
+  //       });
+  //     }
 
-      if(!token) {
-        throw new TRPCError({
-          code: 'BAD_REQUEST',
-          message: 'ID not found',
-        });
-      }
-
-      //update user amount
-      await db.user.update({
-        where: { id: token.userId },
-        data: {
-          amount: {
-            increment: token.amount,
-          }
-        }
-      })
-      // const token = { ...opts.input }; /* [..] add to db */
-      ee.emit('add', token);
-      return {
-        ...token,
-        amount: token.amount.toNumber(),
-      }
-    }),
+  //     //update user amount
+  //     await db.user.update({
+  //       where: { id: token.userId },
+  //       data: {
+  //         amount: {
+  //           increment: token.amount,
+  //         }
+  //       }
+  //     })
+  //     // const token = { ...opts.input }; /* [..] add to db */
+  //     ee.emit('add', token);
+  //     return {
+  //       ...token,
+  //       amount: token.amount.toNumber(),
+  //     }
+  //   }),
   createToken: protectedProcedure
     .input(TopUpSchema)
     .mutation(async ({ ctx, input }) => {
