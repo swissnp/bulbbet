@@ -8,8 +8,10 @@ const WithDrawSuccess = () => {
   const session = useSession();
 
   useEffect(() => {
-    if (+(session.data?.user.amount ?? 0) < 10000) {
-      void router.push("/balance/withdraw-unsuccess");
+    if (session && session.data?.user) {
+      if (+session.data?.user.amount < 10000) {
+        void router.push("/balance/withdraw-unsuccess");
+      }
     }
   });
 
