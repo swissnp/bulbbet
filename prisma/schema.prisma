@@ -66,6 +66,7 @@ model User {
     events        Event[]
     eventHistories EventHistory[]
     payouts       ResolutionPayout[]
+    topUpTokens   TopUpToken[]
 }
 
 model VerificationToken {
@@ -141,4 +142,13 @@ model ResolutionPayout {
     BetHistory EventHistory @relation(fields: [BetHistoryId], references: [id])
 
     @@index([resolutionId])
+}
+
+model TopUpToken {
+    id String @id @default(cuid())
+    userId String
+    user User @relation(fields: [userId], references: [id])
+    token String @unique
+    amount Decimal
+    expires DateTime
 }
